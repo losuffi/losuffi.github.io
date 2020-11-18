@@ -6,17 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>不动点迭代 | YNG-Coach&#39;s Blog</title>
+  <title>全局光照积分函数拟合 | YNG-Coach&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="不动点迭代1. 局部迭代​    如果存在临近区域 $ (r-\epsilon,r+\epsilon) $ 其中$\epsilon &amp;gt; 0$ ，使得临近的区间中所有初始点估计都可以不动迭代到r，则该方法局部收敛到r。  不动点：如果一个函数$g(x)$ 满足 $g(x) &#x3D; x$ 则称x为函数g的不动点。 不动点迭代：$g(x_{0}) &#x3D; x_1$ 将得到到的$x_1$继续代入函数g中得到">
+  <meta name="description" content="傅里叶级数推导与函数投影到正交基函数的类推 在进行全局光照球谐积分时，会遇到使用勒让德正交基函数对光照函数进行逼近的情形。其中对勒让德基函数的系数的计算即为原函数的投影。此文对其投影的数学处理方式进行分析记录  1. 傅里叶级数​    在描述光照函数逼近使用勒让德基函数时，会将之与更为熟悉的傅里叶级数进行类比。宏观上来说，两者的工作内容是类似的，都是将原函数进行分解，用其基函数进行线性叠加对原函">
 <meta name="keywords" content="algorithm">
 <meta property="og:type" content="article">
-<meta property="og:title" content="不动点迭代">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;05&#x2F;%E4%B8%8D%E5%8A%A8%E7%82%B9%E8%BF%AD%E4%BB%A3&#x2F;index.html">
+<meta property="og:title" content="全局光照积分函数拟合">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;11&#x2F;18&#x2F;%E5%85%A8%E5%B1%80%E5%85%89%E7%85%A7%E7%A7%AF%E5%88%86%E5%87%BD%E6%95%B0%E6%8B%9F%E5%90%88&#x2F;index.html">
 <meta property="og:site_name" content="YNG-Coach&#39;s Blog">
-<meta property="og:description" content="不动点迭代1. 局部迭代​    如果存在临近区域 $ (r-\epsilon,r+\epsilon) $ 其中$\epsilon &amp;gt; 0$ ，使得临近的区间中所有初始点估计都可以不动迭代到r，则该方法局部收敛到r。  不动点：如果一个函数$g(x)$ 满足 $g(x) &#x3D; x$ 则称x为函数g的不动点。 不动点迭代：$g(x_{0}) &#x3D; x_1$ 将得到到的$x_1$继续代入函数g中得到">
+<meta property="og:description" content="傅里叶级数推导与函数投影到正交基函数的类推 在进行全局光照球谐积分时，会遇到使用勒让德正交基函数对光照函数进行逼近的情形。其中对勒让德基函数的系数的计算即为原函数的投影。此文对其投影的数学处理方式进行分析记录  1. 傅里叶级数​    在描述光照函数逼近使用勒让德基函数时，会将之与更为熟悉的傅里叶级数进行类比。宏观上来说，两者的工作内容是类似的，都是将原函数进行分解，用其基函数进行线性叠加对原函">
 <meta property="og:locale" content="CN">
-<meta property="og:updated_time" content="2020-11-08T15:40:31.651Z">
+<meta property="og:updated_time" content="2020-11-18T13:38:27.748Z">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="YNG-Coach&#39;s Blog" type="application/atom+xml">
@@ -157,38 +157,78 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-不动点迭代" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-全局光照积分函数拟合" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      不动点迭代
+      全局光照积分函数拟合
     </h1>
   
 
         
-        <a href="/2019/12/05/%E4%B8%8D%E5%8A%A8%E7%82%B9%E8%BF%AD%E4%BB%A3/" class="archive-article-date">
-  	<time datetime="2019-12-04T16:57:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-05</time>
+        <a href="/2020/11/18/%E5%85%A8%E5%B1%80%E5%85%89%E7%85%A7%E7%A7%AF%E5%88%86%E5%87%BD%E6%95%B0%E6%8B%9F%E5%90%88/" class="archive-article-date">
+  	<time datetime="2020-11-18T13:26:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-18</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="不动点迭代"><a href="#不动点迭代" class="headerlink" title="不动点迭代"></a>不动点迭代</h2><h3 id="1-局部迭代"><a href="#1-局部迭代" class="headerlink" title="1. 局部迭代"></a>1. 局部迭代</h3><p>​    如果存在临近区域 $ (r-\epsilon,r+\epsilon) $ 其中$\epsilon &gt; 0$ ，使得临近的区间中所有初始点估计都可以不动迭代到r，则该方法局部收敛到r。</p>
-<blockquote>
-<p>不动点：如果一个函数$g(x)$ 满足 $g(x) = x$ 则称x为函数g的不动点。</p>
-<p>不动点迭代：$g(x_{0}) = x_1$ 将得到到的$x_1$继续代入函数g中得到$x_2$ ，$g(x_1) = x_2$。如此迭代，直到达到不动点</p>
+        <h1 id="傅里叶级数推导与函数投影到正交基函数的类推"><a href="#傅里叶级数推导与函数投影到正交基函数的类推" class="headerlink" title="傅里叶级数推导与函数投影到正交基函数的类推"></a>傅里叶级数推导与函数投影到正交基函数的类推</h1><blockquote>
+<p>在进行全局光照球谐积分时，会遇到使用勒让德正交基函数对光照函数进行逼近的情形。其中对勒让德基函数的系数的计算即为原函数的投影。此文对其投影的数学处理方式进行分析记录</p>
 </blockquote>
-<a id="more"></a>
-<ul>
-<li><p>假设函数g是连续可微的函数，$g(r) = r, S=|g’(r)| &lt; 1$，则不动点迭代对于一个足够接近r的初始估计，以速度S线性收敛到不动点r。</p>
-<p>​    根据中值定理，在$x<em>i$ 和$r$之间存在$c_i$ 使得式子：$x</em>{i+1} -r = g’(c_i)(x_i - r)$ 成立</p>
-<p>如果$S = |g’(r)| &lt; 1$ ，则通过替换$g’$ ,在$r$ 附近一个足够小的区间满足 $|g’(x)| &lt; (S + 1)/2 $ ,这个值比$S$大一点，但仍然比1小。如果$x<em>i$ 恰好出现在该区间，则$ci$ 也在该区间（中值定理）因而$e</em>{i+1} \leqslant   \frac{S+1}{2}e_i$ 。所以误差以$(S+1)/2$ 的速度下降，在后面的各步中也许会比该速度更好。 但是符合局部迭代的概念</p>
-</li>
-</ul>
+<h3 id="1-傅里叶级数"><a href="#1-傅里叶级数" class="headerlink" title="1. 傅里叶级数"></a>1. 傅里叶级数</h3><p>​    在描述光照函数逼近使用勒让德基函数时，会将之与更为熟悉的傅里叶级数进行类比。宏观上来说，两者的工作内容是类似的，都是将原函数进行分解，用其基函数进行线性叠加对原函数进行近似。因此由傅里叶为例进行分析，后面再类推到其他正交基函数的投影计算。</p>
+<p>​    傅里叶公式为：<script type="math/tex">f(x) = A_0 + \sum\limits_{n=1}^\infty[a_n\cos(n\omega t) +b_n\sin(n\omega t)] \tag{1}</script></p>
+<h4 id="a-正交性"><a href="#a-正交性" class="headerlink" title="a. 正交性"></a>a. 正交性</h4><p>​    将原始函数分解为了两组三角函数。三角函数是具备正交性的，即有：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+\int_{-\pi}^{\pi}\cos{nx\,dx} &=0\qquad(n=1,2,3,...) \tag{2.1} \\
+\int_{-\pi}^{\pi}\sin{nx\,dx} &=0\qquad(n=1,2,3,...) \tag{2.2} \\
+\int_{-\pi}^{\pi}\sin{kx\cdot \cos{nx}\, dx} &=0\qquad(k,n=1,2,3,...;k \neq n) \tag{2.3} \\
+\int_{-\pi}^{\pi}\cos{kx\cdot \cos{nx}\, dx} &=0\qquad(k,n=1,2,3,...;k \neq n) \tag{2.4} \\
+\int_{-\pi}^{\pi}\sin{kx\cdot \sin{nx}\, dx} &=0\qquad(k,n=1,2,3,...;k \neq n) \tag{2.5} \\
+\end{align*}</script><p>​    下面以$(2.4)$为例，求其定积分，验证其正交正确性</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+\cos{kx\cdot}\cos{nx} &= \frac{1}{2}[\cos{(k+n)x} + \cos{(k-n)x}] \\
+\sin{kx\cdot}\sin{nx} &= \frac{1}{2}[\cos{(k+n)x} - \cos{(k-n)x}] \\
+\sin{kx\cdot}\cos{nx} &= \frac{1}{2}[\sin{(k+n)x} + \sin{(k-n)x}] \\
+\\
+when \qquad k\neq n:\\
+\int_{-\pi}^{\pi}\cos{kx\cdot}\cos{nx\;dx} &= \frac{1}{2}\int_{-\pi}^{\pi}[\cos{(k+n)x} + \cos{(k-n)x}]dx\\
+&=\frac{1}{2}[\frac{\sin{(k+n)x}}{k+n} +\frac{\sin{(k-n)x}}{k-n}]|_{-\pi}^{\pi}\\
+&=\frac{1}{2}[0+0]=0
+\end{align*}</script><p>其他等式也可逐一验证</p>
+<h4 id="b-系数推导"><a href="#b-系数推导" class="headerlink" title="b. 系数推导"></a>b. 系数推导</h4><p>​    大体思路为：将$(1)$ 等号的左右两边分别积分，利用三角函数的正交性，将其积分为0，去掉杂项，而后解出其系数</p>
+<p>对$(1)$ 在$[-\pi,\pi]$积分，得:</p>
+<script type="math/tex; mode=display">
+\begin{split}
+\int_{-\pi}^{\pi} &= \int_{-\pi}^{\pi}A_0 + \int_{-\pi}^{\pi}{\sum\limits_{n=1}^{\infty}[a_n\cos{n\omega t} + b_n\sin{n\omega t}]}\\
+&=\int_{-\pi}^{\pi}A_0 +0=A_0|_{-\pi}^{\pi}\\
+&=(\pi-(-\pi))A_0\\
+&=2\pi A_0
+\end{split}</script><p>解得：$A<em>0 = \frac{1}{2\pi}\int</em>{-\pi}^{\pi}f(t)$</p>
+<p>​    求$a_n$ 项和$b_n$ 项，方法是相同的，现在$(1)$等号两边，分别乘上$\cos{k\omega t}$ 项后，再积分</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\int_{-\pi}^{\pi}f(t)\cdot\cos{k\omega t}\,dt &= A_0\int_{-\pi}^{\pi}\cos{k\omega t}\,dt+\sum_{n=1}^{\infty}[a_n\int_{-\pi}^{\pi}\cos{n\omega t}\cdot\cos{k\omega t}\;dt] +b_n\int_{-\pi}^{\pi}\sin{n\omega t}\cdot \cos{k\omega t\;dt}] \tag{3}\\
+\end{align}</script><p>​    根据三角函数的正交性，仅有$k=n$时$\cos{k\omega t\cdot\cos{n\omega t}\;dt}$积分项不为0，其余项均为0，所以有</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\int_{-\pi}^{\pi}\cos(k\omega t)\cdot f(t) &= a_n\sum_{n=1}^{\infty}\int_{-\pi}^{\pi}\cos(k\omega t)\cdot \cos(n\omega t)dt\\
+&=a_n\int_{-\pi}^{\pi}\cos^2(n\omega t)dt\\
+&=\frac{a_n}{2}\int_{-\pi}^{\pi}(1+\cos{2n\omega t})dt \quad(半角公式)\\
+&=\frac{a_n}{2}(\int_{-\pi}^{\pi}1dt+\int_{-\pi}^{\pi}cos2n\omega t\;dt)\\
+&=\frac{a_n}{2}\cdot 2\pi \\
+&=a_n\pi
+\end{align}</script><p>因此解得:</p>
+<p>$a<em>n=\frac{1}{\pi}\int</em>{-\pi}^{\pi}\cos(n\omega t)\cdot f(t)dt \quad (k=n)$ </p>
+<p>同理可以乘入$\sin(k\omega t)$求出$b_n$</p>
+<h3 id="2-球谐函数拟合"><a href="#2-球谐函数拟合" class="headerlink" title="2.球谐函数拟合"></a>2.球谐函数拟合</h3><p>​    光照函数拟合等式为：$L(t) = \sum\limits_{i=0}^{\infty}c_iB_i$</p>
+<p>​    其中$B_i$ 为基函数，$c_i$为对应基函数的系数。其中基函数是已知的，而我们主要是需要求出对应的$c_i$,在渲染中，通常使用的是线性基函数中的勒让德基正交多项式。勒让德正交多项式有两个参数$l$和$m$，将多项式族分解为函数带，其中$l$是函数带的索引，是一个从$[0,\infty]$ 的值，而每一个函数带上的$m$取值为：$[0,l]$ </p>
 
       
 
@@ -279,7 +319,7 @@
     <a class="close js-modal-close" href="javascript:;" target="_blank" rel="noopener"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/12/05/%E4%B8%8D%E5%8A%A8%E7%82%B9%E8%BF%AD%E4%BB%A3/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/11/18/%E5%85%A8%E5%B1%80%E5%85%89%E7%85%A7%E7%A7%AF%E5%88%86%E5%87%BD%E6%95%B0%E6%8B%9F%E5%90%88/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -293,18 +333,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/12/05/Paxel/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Paxel渲染管线搭建
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/12/05/hexo-environment/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">hexo environment</div>
+    <a href="/2020/11/08/%E5%8F%A4%E9%A3%8E%E6%8B%8D%E6%91%84%E8%AE%B0%E5%BD%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">古风拍摄记录</div>
       <i class="icon-circle-right"></i>
     </a>
   
