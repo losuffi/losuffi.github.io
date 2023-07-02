@@ -1,0 +1,523 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8 ]><html class="ie ie8" lang="chinese (simplified)"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="chinese (simplified)">
+<!--<![endif]-->
+	<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="author" content="losuffi">
+
+
+        <title>Losuffi's Blog - 大气散射（译文）</title>
+
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="/theme/css/style.css">
+
+        <!-- Custom CSS -->
+        	<link rel="stylesheet" href="/theme/css/colors/blue.css" id="colors">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+
+        <meta name="tags" contents="[图形]" />
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Losuffi's Blog">
+
+	<meta property="og:type" content="article">
+	<meta property="article:author" content="">
+	<meta property="og:url" content="/da-qi-san-she-yi-wen.html">
+	<meta property="og:title" content="大气散射（译文）">
+	<meta property="og:description" content="">
+	   <meta property="og:image" content="/images/guilherme-toti.jpg">
+	<meta property="article:published_time" content="2018-11-20 00:14:55+01:00">
+	</head>
+	<body>
+		<header id="header">
+			<!-- Container -->
+			<div class="container">
+				<!-- Logo / Mobile Menu -->
+				<div class="five columns">
+					<div id="textlogo">
+						<h1><a href="/">Losuffi's Blog</a></h1>
+					</div>
+				</div>
+						<!-- Navigation
+				================================================== -->
+				<div class="eleven columns">
+
+					<nav id="navigation" class="menu">
+						<ul id="responsive">
+
+							<li><a href="/">Home</a></li>
+
+
+						</ul>
+					</nav>
+				</div>
+			</div>
+			<!-- Container / End -->
+		</header>
+		<!-- Header / End -->
+
+		<!-- Breadcrumbs Container-->
+		<div id="content-wrapper">
+			<section id="titlebar">
+				<!-- Container -->
+				<div class="container">
+				<div class="thirteen columns">
+					<nav id="breadcrumbs">
+						<ul>
+							<li>You are here:</li>
+							<li><a href="/">Home</a></li>
+<li><a href="/category/misc.html">misc</a></li>
+<li>大气散射（译文）</li>
+						</ul>
+					</nav>
+				</div>
+				</div>
+				<!-- Container / End -->
+			</section>
+
+			<div class="container">
+	<div class="twelve alt columns">
+<article class="post" style="margin: 0; border: 0;">
+
+	<div class="post-format">
+		<div class="circle"><i class="icon-pencil"></i><span></span></div>
+	</div>
+
+	<section class="post-content">
+
+		<header class="meta">
+			<h2><a href="/da-qi-san-she-yi-wen.html">大气散射（译文）</a></h2>
+			<ul>
+				<li>By <a href="/author/losuffi.html">losuffi</a></li>
+				<li>周二 20 十一月 2018</li>
+			</ul>
+		</header>
+
+		<h1>大气光散射（译文）</h1>
+<p>[TOC]</p>
+<h2>1. 引言</h2>
+<p>​   大气光散射是一种重要的自然现象，它是由光与传播介质中的粒子相互作用产生的。许多应用程序都需要用到这种效果，比如电脑游戏，为了提高场景的真实度，需要这种效果。为了精确计算散射分布，需要求解像素级的多重嵌套积分。由于涉及到算法的复杂度过高，因此在实时渲染中，实现大气散射是一个具有挑战性的难题。</p>
+<p>​   该文章介绍了一种利用极线采样来显著减少计算的光线行进的样本数量，的体积光渲染方法</p>
+<!-- more -->
+
+<h2>2. 光散射基础知识</h2>
+<p>​   光通过介质时，主要会产生三种现象：</p>
+<ul>
+<li>吸收是指电磁能转换为其他形式的能量，比如热量</li>
+<li>排放是辐射电磁能量</li>
+<li>散射是改变光的方向</li>
+</ul>
+<p>​   空气的排放和吸收可以忽略不计，所以我们只需要考虑散射即可。从理论上讲，光子可以经历多次散射后到达人的眼睛。但是光在介质中多次散射的传输方程，很难计算。因此，实施渲染时通常使用单次散射模型。即假定光在介质中仅散射一次，且不考虑进一步的散射。</p>
+<p>​   散射效应通过两种方式影响场景对象，这种现象称为空气透视。一种是阳光通过散射进入摄像机，而另一方面本该射入摄像机的目标物体的反射光也会由于散射而产生衰减。因此，在相机处测量的最终辐射是两种辐射的总和：目标物体的衰减辐射和光源的散射
+</p>
+<div class="math">$$
+\begin{align}
+L=L_0*F_{ex}+L_{inscattering}
+\end{align}
+$$</div>
+<p>
+<img alt="Fig.1" src="https://software.intel.com/sites/default/files/ls-image003.png"></p>
+<p>​                                   图1. 散射效应产生的空气透视现象</p>
+<ul>
+<li>光照强度L是一个由3个变量求得的函数：位置参数x，方向v和波长λ</li>
+<li>空间中任意一点的散射通过两个参数描述：取决于位置和波长的散射系数 β(x,λ)，和以视角和光线方向为参数的相位函数ρ(v,l)。</li>
+</ul>
+<p>散射函数描述的是任意方向上单位长度的光的散射部分。相位函数描述了散射光的角度分布。依照能量守恒，相位函数积分：
+</p>
+<div class="math">$$
+\int_Ω{ρ(v,l)dω=1}
+$$</div>
+<p>
+表示所有方向上的相位函数之和为1</p>
+<p>接下来让我们来考虑等式的两个部分：
+</p>
+<div class="math">$$
+衰减F_{ex} 和散射L_{inscattering}
+$$</div>
+<h3>衰减</h3>
+<p>​   每一截面长度的光的散射能量（微分）ds，与光的强度和散射系数，以及截面长度成正比:
+</p>
+<div class="math">$$
+dL_{Sctr}(x,v,λ)=β(x,λ)●L(x,v,λ)●ds
+$$</div>
+<p>
+举例来说，比如我们要求相机C接收到物体A传来的衰减光：
+</p>
+<div class="math">$$
+L(C,v,λ)=L_0e^{-\int_C^O{β(x,λ)ds} }
+$$</div>
+<p>
+上式中，L0为物体O点的初始光照，在乘上C到O的衰减积分后，得到最终相机接收到的衰减光照。</p>
+<p>到这里，我们很容易提取出衰减系数的公式如下（A点到B点的衰减）：
+</p>
+<div class="math">$$
+F_{ex}(A,B,λ)=e^{-\int_A^B{β(x,λ)ds}}
+$$</div>
+<h3>散射</h3>
+<p>散射部分，计算起来要更加复杂一些。我们需要再次使用公式:
+</p>
+<div class="math">$$
+dL_{Insctr}(x,v,λ)=E_{sun}(x,λ)●β(x,λ)●V(x)●ρ(v,l)
+$$</div>
+<p>
+但是此时我们不再把它看成物体投向摄像机过程的散射，而是阳光或其他光源投向摄像机的散射。它正比于太阳的光照强度，还必须通过使用相位函数调制，来获取更精确的散射分量（衰减函数未使用相位函数调制）。由于阴影的原因，我们还需要考虑太阳散射的可见性。可见为1，不可见为0。由此，得出上式</p>
+<p><img alt="" src="https://software.intel.com/sites/default/files/ls-image026.png"></p>
+<p>​                               图2. 散射的能量分布的微分</p>
+<p>这种散射光在到达相机之前会衰减。如果我们将当前位置表示为：
+</p>
+<div class="math">$$
+P=C+vs
+$$</div>
+<p>
+那么整个散射光的分布表示如下:
+</p>
+<div class="math">$$
+L_{insctr}(c,v,λ)=\int_C^O{dL_{insctr}(x,v,λ)●F_{ex}(P,C,λ)}
+$$</div>
+<h3>空气的散射参数</h3>
+<p>空气通常把它看作由两种分子混合的介质：分子和气溶胶。根据瑞利散射（一种光学理论），当例子的半径r&lt;0.1λ时，即属于瑞利散射。散射的能量分布概率取决于光的方向，以及散射方向的夹角。瑞利粒子的归一化相位函数如下:
+</p>
+<div class="math">$$
+ρ(θ)=\frac{3}{16π}(1+cos^2θ)
+$$</div>
+<p>
+大气分子的散射取决于波长，波长短的散射要比波长长的散射更大，这就是为什么天空是蓝色的原因。当然这仅是气体分子，而气溶胶的散射更复杂，它的散射能使用米氏理论描述。在大气散射中，关于雾度的米氏相位函数通常用Henyey-Greenstein相位函数进行近似:
+</p>
+<div class="math">$$
+ρ_{Mie}(θ)=\frac{1-g^2}{4π(1+g^2-2g\cos{θ})^{s/2}}
+$$</div>
+<p>
+关于瑞利粒子和米氏(Mie)粒子的散射系数推导可搜索相关关键词了解更多</p>
+<h3>假设</h3>
+<p>上述计算中，涉及的积分通常是很难计算的，所以通常会进行一些简化。为了简化计算，我们做出如下的假设：</p>
+<ul>
+<li>
+<p>散射系数不依赖于空间中的位置，即假设传播的介质是均匀的：
+  <div class="math">$$
+  β(x,λ)=β(λ)
+  $$</div>
+</p>
+</li>
+<li></li>
+</ul>
+<div class="math">$$
+E_{sun}(x,λ)=E_{sun}(λ)
+$$</div>
+<p>这样的简化，对于地面的散射效应渲染是合理的。</p>
+<p>基于这样的假设那么衰减系数可变化为:
+</p>
+<div class="math">$$
+\begin{align}
+F_{ex}(A,B,λ) &amp;=e^{-\int_A^B{β(x,λ)ds}}
+\\&amp;=e^{-(β_{Rlgh}(λ)+β_{Mie}(λ))\int_A^Bds}
+\\&amp;=e^{-(β_{Rlgh}(λ)+β_{Mie}(λ))||A-B||}
+\end{align}
+$$</div>
+<p>
+||A-B||表示A点到B点的距离</p>
+<p>现在我们来重写散射能量的公式：
+</p>
+<div class="math">$$
+\begin{align}
+L_{insctr}(c,v,λ) &amp;=\int_C^O{dL_{insctr}(x,v,λ)●F_{ex}(P,C,λ)}
+\\&amp;=E_{sun}(λ)\frac{(β_{Rlgh}(λ)ρ_{Rlgh}(θ)+β_{Mie}(λ)ρ_{Mie}(θ))}{β_{Rlgh}(λ)+β_{Mie}(λ)}\int_C^O{V(x)●exp(-(β_{Rlgh}(λ)+β_{Mie}(λ))s)}
+\end{align}
+$$</div>
+<p>
+我们做如下定义：
+</p>
+<div class="math">$$
+F(λ,θ)=E_{sun}(λ)\frac{(β_{Rlgh}(λ)ρ_{Rlgh}(θ)+β_{Mie}(λ)ρ_{Mie}(θ))}{β_{Rlgh}(λ)+β_{Mie}(λ)}
+\\I(λ,s)=-exp(-(β_{Rlgh}(λ)+β_{Mie}(λ))s)
+$$</div>
+<p>
+然后我们就可以将公式改写成：
+</p>
+<div class="math">$$
+L_{insctr}(c,v,λ)=F(λ,θ)●(1+I(λ,||O-C||))
+$$</div>
+<p>
+由于在阴影区域，应该没有散射能量。如图三</p>
+<p><img alt="" src="https://software.intel.com/sites/default/files/ls-image049.png"></p>
+<p>​                                   图3. 将视图的光暗区域进行划分</p>
+<p>我们将光亮区域划分为一个[S,E]段,那么散射公式如下:
+</p>
+<div class="math">$$
+\begin{align}
+L_{insctr}(c,v,λ) &amp;=\sum_{i=0}^N(L_{insctr}^{l}(E_i,v,λ)-(L_{insctr}^{l}(S_i,v,λ)))
+\\&amp;=F(λ,θ)●\sum_{i=0}^N(I(λ,||E_i-C||)-I(λ,||S_i-C||))
+\end{align}
+$$</div>
+<p>
+得到上述的公式后，我们就可以制定我们用于计算散射积分的初始算法了:</p>
+<ol>
+<li>
+<p>将光线分成N段</p>
+</li>
+<li>
+<p>让L(insct).rgb=0  I(prev).rgb=-1</p>
+</li>
+<li>
+<p>让每一段进行下述计算:</p>
+</li>
+</ol>
+<p>a. 计算I(current).rgb=I(λ(rgb),d) ,d是当前段的长度</p>
+<p>b. 如果当前段，不在影子当中，那么L(insct).rgb+=I(current).rgb-I(prev).rgb</p>
+<p>c.I(prev).rgb=I(current).rgb</p>
+<ol>
+<li>最后再乘上F(λ(rgb),θ)</li>
+</ol>
+<p>​                算法1：计算散射积分</p>
+<p>其实就是一个完成上述公式的算法过程。</p>
+<h2>3. 极线采样</h2>
+<p>​   为了应用体积光效果，我们需要从摄像机的屏幕的每一个像素点投射一道光线去执行算法1，但是这种做法计算太大，太耗费资源了。所以需要找到一个方法去减少计算量。Light shaft（光轴）在屏幕上看来有一个特别的结构：即它们都是从屏幕上的光源点辐射出来的。Engelhard和Dachsbacher注意到散射光和光轴成正交变换，但是大部分是光滑变化的。为了解释这个特性，他们提出了一个有效的采样方案。他们的想法是沿着光轴，也就是从太阳位置到屏幕边缘的极线上进行射线行进采样（Ray Marching），并且在采样点之间设置额外的插值采样点。因为光照强度在射线上光滑变化，所以可以利用Ray marching的采样点的强度来进行线性插值，得到其他位置的强度。</p>
+<p>​   <img alt="0" src="https://software.intel.com/sites/default/files/ls-image059.png"></p>
+<p>​                   图4. 使用步进采样（RayMarching）和插值采样点的极线采样</p>
+<p>​   Engelhard和Dachsbacher提出的算法步骤如下：</p>
+<ul>
+<li>将场景渲染到屏幕空间</li>
+<li>计算散射分布</li>
+<li>在深度间隔处放置采样点</li>
+<li>使用步进采样点对其它采样点进行插值</li>
+<li>使用来自附近的极线采样点的插值计算每个像素的散射</li>
+<li>散射与背景光的衰减进行组合（add）</li>
+</ul>
+<p>在我们的实现中，我们遵循了Engelhardt和Danchsbacher的基本思想，并在第5节讨论了一些改进和修改</p>
+<h2>4.一维 最小/最大 mipmap优化</h2>
+<p>​   极线采样有一个重要的特点：在一个极片中的相机光线，共享同一个平面。该平面与阴影贴图的交点形成了一个一维高度图。算法1中的阴影测试的本质是检查光线上当前的位置是在该高度图之下还是在其上方。</p>
+<p>​   <img alt="" src="https://software.intel.com/sites/default/files/ls-image060.png"></p>
+<p>​               图5 . 一个极平面上所有的光线进行利用一维高度图进行测试</p>
+<p>​   为了加速步进算法的进行，提出了为每个极线片面构建一个最小最大的二叉树，然后使用它来鉴定光线上的亮部和暗部。</p>
+<p>​   <img alt="" src="https://software.intel.com/sites/default/files/ls-image061.png"></p>
+<p>​               图6. 极线切面上的第一层最大最小二叉树</p>
+<p>​   考虑图7.如果当前光线末端的最大深度小于二叉树上的最小深度，那么那么当前部分就是亮部，我们可以加入散射给当前段。对于AB部分而言满足条件时:
+</p>
+<div class="math">$$
+AB: max(d_A,d_B)&lt;d_{min}
+$$</div>
+<p>
+这意味着，算法1中接下来的四次迭代，光线都处于光亮部分（因为这是二叉树的第二层）。因此我们可以仅做一次没有阴影的计算而不需要进行四次迭代，因为它们的结果是一样的。</p>
+<p>​   另一种情况，如果光线末端的最小深度大于二叉树中的最大深度，即这部分光线完全处于阴影当中，我们可以完全抛弃它们。对于CD部分而言满足条件时:
+</p>
+<div class="math">$$
+CD:min(d_C,d_D)&gt;d_{max}
+$$</div>
+<p>
+这种情况下，算法1中我们可以推进接下来的四次迭代（无视该四次迭代的计算）而不会产生任何错误。</p>
+<p>​   当然也有可能遇到EF段这种情况。在这种情况下有必要进入到树的下一个层级进行更精细的测试。</p>
+<p>​   因为实际使用中，我们使用默认的depth buffering ，所以所有的检测都是颠倒的</p>
+<p><img alt="" src="https://software.intel.com/sites/default/files/ls-image064.png"></p>
+<p>​                       图7. 使用第二层树来决定亮部或者暗部</p>
+<p>​   上述二叉树遍历算法本质上是光线、高度图的交集方法的改编，其中遍历不是使用递归完成的。利用上述的高度图二叉树，可以对算法1进行改进。注意，光线步进是在阴影贴图空间中完成的。为此，光线的终点投影到阴影贴图上，然后沿着投影线进行采样：</p>
+<p>​   1.将Camera的光线投影到阴影空间的深度贴图上，计算出
+</p>
+<div class="math">$$
+UV_{Start},UV_{End},UV_{Step}
+$$</div>
+<p>
+​   2.设置初始值:
+</p>
+<div class="math">$$
+L_{Insct}.rgb=0, PrevI.rgb=-1
+$$</div>
+<p>
+​   3.设置树的层数Index：
+</p>
+<div class="math">$$
+Level=0,SampleInd=0
+$$</div>
+<p>
+​   4.设置变量：
+</p>
+<div class="math">$$
+UV=UV_{start}
+$$</div>
+<p>
+​   5.当射线march 到时（不好翻译，需要了解Ray March算法），执行以下操作：</p>
+<p>​       5.1<br>
+</p>
+<div class="math">$$
+if(SampleInd \mod 2^{Level+1}) ==0
+\\Then: Level=Level+1
+$$</div>
+<p>
+​       5.2 当 Level&gt;0时，迭代，计算光线段的开始点和结束点的深度得到:
+</p>
+<div class="math">$$
+d_{Start}和d_{End}
+$$</div>
+<p>
+​       5.2.1</p>
+<p>​       </p>
+<h2>5.算法</h2>
+<p>​   我们的算法结合了极线采样方法和一维最小/最大mipmap的优化算法。主要步骤如下：</p>
+<ol>
+<li>首先将带光源的场景渲染出来</li>
+<li>从深度缓冲区中拿到深度，依据它重建一个线性的屏幕空间（可自定义，可以理解为一张自定义的用来做散射的深度图）</li>
+<li>建立一个一维 min/max mipmap</li>
+<li>渲染纹理坐标贴图：</li>
+<li>首先定义屏幕边界上的极点数目，需要保证所有相邻极点之间的空隙是等距的。将每一个极点，连接到光源点上，得到极线，每一个极点到光源点的连线线段就是极线。而我们的采样点就是沿着每一条极线均匀放置的。</li>
+<li>如果光源在屏幕外，采样点设置时忽略掉，超出屏幕的位置。</li>
+<li>检测深度的间断位置，并且定义采样点的初始位置</li>
+<li>在没有遮挡光的物体时，采样点初始设置是用来获取光的变化的。</li>
+<li>额外设置采样点，在相邻像素之间的Z差异（自定义深度图采样值）超过阈值的位置处</li>
+<li>对设置的采样点执行Ray marching</li>
+<li>利用Ray marching 计算出的散射光照，插值算出其他的采样点的散射光照</li>
+<li>将散射采样点转换空间，从极坐标转换到缩小尺寸的矩形缓冲中</li>
+<li>确定两条最邻近的极线</li>
+<li>将采样点投射到极线上，并利用Z差异，进行双边双线性过滤。</li>
+<li>标记没有配备采样点的像素点</li>
+<li>修正 无法通过ray marching 操作从极线坐标中正确的插值的采样点</li>
+<li>将散射图像拓展到源图像分辨率，并将其与衰减背景相结合<ol>
+<li>执行双边过滤</li>
+<li>标记没有配置采样点的像素点</li>
+</ol>
+</li>
+<li>纠正散射</li>
+</ol>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+		    <div class="tags">
+		        <p>tags: <a href="/tag/tu-xing.html">[图形]</a></p>
+		    </div>
+
+<div class="sharing">
+</div>
+<hr>
+
+	</section>
+	<div class="clearfix"></div>
+
+</article>
+
+	</div>
+
+	<!-- Sidebar -->
+	<div class="four columns">
+
+		<!-- Categories -->
+		<div class="widget">
+			<h3 class="headline">Categories</h3><span class="line"></span><div class="clearfix"></div>
+			<nav class="categories">
+				<ul>
+					    <li class="active"><a href="/category/misc.html">misc</a></li>
+				</ul>
+			</nav>
+		</div>
+		
+		<!-- Tags -->
+		<div class="widget">
+			<h3 class="headline">Tags</h3><span class="line"></span><div class="clearfix"></div>
+			<nav class="tags">				    <a href="/tag/algorithm.html">[algorithm]</a>
+				    <a href="/tag/log.html">[Log]</a>
+				    <a href="/tag/photograph.html">[photograph]</a>
+				    <a href="/tag/tu-xing.html">[图形]</a>
+			</nav>
+		</div>
+	</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Content Wrapper / End -->
+
+		<div id="footer-bottom">
+			<!-- Container -->
+			<div class="container">
+				<div class="eight columns">&copy;  || Blog powered by <a href="http://getpelican.com">Pelican</a></div>
+					<div class="eight columns">
+						<ul class="social-icons-footer">
+								<li>
+									<a href="#" class="tooltip top" title="Empty">
+										<i class="icon-empty"></i>
+									</a>
+								</li>
+							<li><a href="/None" class="tooltip top" title="RSS"><i class="icon-rss"></i></a></li>
+						</ul>
+					</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Footer Bottom / End -->
+
+	<!-- Javascripts -->
+	<script src="/theme/js/jquery.min.js"></script>
+	</body>
+</html>

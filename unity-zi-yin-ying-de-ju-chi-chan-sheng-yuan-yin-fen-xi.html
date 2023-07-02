@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8 ]><html class="ie ie8" lang="chinese (simplified)"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="chinese (simplified)">
+<!--<![endif]-->
+	<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="author" content="losuffi">
+
+
+        <title>Losuffi's Blog - Unity 自阴影的锯齿产生原因分析</title>
+
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="/theme/css/style.css">
+
+        <!-- Custom CSS -->
+        	<link rel="stylesheet" href="/theme/css/colors/blue.css" id="colors">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+
+        <meta name="tags" contents="[图形]" />
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Losuffi's Blog">
+
+	<meta property="og:type" content="article">
+	<meta property="article:author" content="">
+	<meta property="og:url" content="/unity-zi-yin-ying-de-ju-chi-chan-sheng-yuan-yin-fen-xi.html">
+	<meta property="og:title" content="Unity 自阴影的锯齿产生原因分析">
+	<meta property="og:description" content="">
+	   <meta property="og:image" content="/images/guilherme-toti.jpg">
+	<meta property="article:published_time" content="2019-11-20 20:42:16+01:00">
+	</head>
+	<body>
+		<header id="header">
+			<!-- Container -->
+			<div class="container">
+				<!-- Logo / Mobile Menu -->
+				<div class="five columns">
+					<div id="textlogo">
+						<h1><a href="/">Losuffi's Blog</a></h1>
+					</div>
+				</div>
+						<!-- Navigation
+				================================================== -->
+				<div class="eleven columns">
+
+					<nav id="navigation" class="menu">
+						<ul id="responsive">
+
+							<li><a href="/">Home</a></li>
+
+
+						</ul>
+					</nav>
+				</div>
+			</div>
+			<!-- Container / End -->
+		</header>
+		<!-- Header / End -->
+
+		<!-- Breadcrumbs Container-->
+		<div id="content-wrapper">
+			<section id="titlebar">
+				<!-- Container -->
+				<div class="container">
+				<div class="thirteen columns">
+					<nav id="breadcrumbs">
+						<ul>
+							<li>You are here:</li>
+							<li><a href="/">Home</a></li>
+<li><a href="/category/misc.html">misc</a></li>
+<li>Unity 自阴影的锯齿产生原因分析</li>
+						</ul>
+					</nav>
+				</div>
+				</div>
+				<!-- Container / End -->
+			</section>
+
+			<div class="container">
+	<div class="twelve alt columns">
+<article class="post" style="margin: 0; border: 0;">
+
+	<div class="post-format">
+		<div class="circle"><i class="icon-pencil"></i><span></span></div>
+	</div>
+
+	<section class="post-content">
+
+		<header class="meta">
+			<h2><a href="/unity-zi-yin-ying-de-ju-chi-chan-sheng-yuan-yin-fen-xi.html">Unity 自阴影的锯齿产生原因分析</a></h2>
+			<ul>
+				<li>By <a href="/author/losuffi.html">losuffi</a></li>
+				<li>周三 20 十一月 2019</li>
+			</ul>
+		</header>
+
+		<blockquote>
+<p>Unity的默认阴影实现方式是传统的ShadowMap，这种利用光照空间渲染光照深度贴图的做法，容易产生阴影锯齿，而且即使调整阴影贴图的分辨率，也得不到有效的解决。</p>
+</blockquote>
+<!-- more -->
+
+<h3>1.ShdowMask阴影方式工作流程介绍</h3>
+<p>​   观察FrameDebug，有一个单独光照深度贴图写入的Pass，大概可得出如下流程：</p>
+<div class="highlight"><pre><span></span><code><span class="nf">graph</span><span class="w"> </span><span class="n">TD</span>
+<span class="n">s</span><span class="p">[</span><span class="err">光照深度贴图生产</span><span class="n">Pass</span><span class="p">]</span><span class="o">--&gt;</span><span class="mi">0</span>
+<span class="mi">0</span><span class="p">(</span><span class="err">剔除超出阴影范围的</span><span class="n">Object</span><span class="p">)</span><span class="o">--&gt;</span><span class="n">A</span>
+<span class="n">A</span><span class="p">(</span><span class="n">DrawCall</span><span class="p">)</span><span class="o">--&gt;</span><span class="n">B</span><span class="p">(</span><span class="err">写入光照空间深度贴图</span><span class="p">)</span>
+
+<span class="n">d</span><span class="p">[</span><span class="err">阴影渲染</span><span class="n">Pass</span><span class="p">]</span><span class="o">--&gt;</span><span class="n">C</span><span class="p">(</span><span class="err">遮挡剔除</span><span class="p">)</span>
+<span class="n">C</span><span class="o">--&gt;</span><span class="n">D</span><span class="p">(</span><span class="n">Drawcall</span><span class="p">)</span>
+<span class="n">D</span><span class="o">--&gt;</span><span class="n">E</span><span class="p">(</span><span class="err">转换该屏幕空间坐标到光照空间拿到光照深度贴图取值</span><span class="n">UV</span><span class="p">)</span>
+<span class="n">E</span><span class="o">--&gt;</span><span class="n">F</span><span class="p">(</span><span class="err">拿到该</span><span class="n">UV在光照深度图下的深度以及该点在光照空间下的Z值</span><span class="p">)</span>
+<span class="n">F</span><span class="o">--&gt;</span><span class="n">H</span><span class="p">(</span><span class="err">返回两者的</span><span class="n">Compare值</span><span class="p">)</span>
+<span class="n">H</span><span class="o">--&gt;</span><span class="n">G</span><span class="p">(</span><span class="err">将返回值保存在屏幕阴影贴图中</span><span class="p">)</span>
+</code></pre></div>
+
+<p>大体过程如此，至于后续的CSM本质上是阴影贴图渲染多次DownSample操作。与后续内容没太大影响</p>
+<h3>2. 会产生阴影锯齿的原因</h3>
+<p>在某种情况下，在光照空间下的物体边缘的一个像素点，在相机空间下是一列像素点。比如光垂直射下，而我们水平观察。 这样由于锯齿，就会导致该像素点的列，读取到的阴影可能是明暗相间的。</p>
+<blockquote>
+<p>如果在光照空间下， 关注 物体的 明暗边缘，由于三角片的原因 导致那一列的 光照空间UV 是同一个值，那么 由于锯齿，就会造成 相机空间下，阴影的锯齿~</p>
+</blockquote>
+<p><img alt="" src="https://i.imgur.com/W72rzgG.png"></p>
+<p><img alt="" src="https://i.imgur.com/ermqvkn.jpg"></p>
+		    <div class="tags">
+		        <p>tags: <a href="/tag/tu-xing.html">[图形]</a></p>
+		    </div>
+
+<div class="sharing">
+</div>
+<hr>
+
+	</section>
+	<div class="clearfix"></div>
+
+</article>
+
+	</div>
+
+	<!-- Sidebar -->
+	<div class="four columns">
+
+		<!-- Categories -->
+		<div class="widget">
+			<h3 class="headline">Categories</h3><span class="line"></span><div class="clearfix"></div>
+			<nav class="categories">
+				<ul>
+					    <li class="active"><a href="/category/misc.html">misc</a></li>
+				</ul>
+			</nav>
+		</div>
+		
+		<!-- Tags -->
+		<div class="widget">
+			<h3 class="headline">Tags</h3><span class="line"></span><div class="clearfix"></div>
+			<nav class="tags">				    <a href="/tag/algorithm.html">[algorithm]</a>
+				    <a href="/tag/log.html">[Log]</a>
+				    <a href="/tag/photograph.html">[photograph]</a>
+				    <a href="/tag/tu-xing.html">[图形]</a>
+			</nav>
+		</div>
+	</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Content Wrapper / End -->
+
+		<div id="footer-bottom">
+			<!-- Container -->
+			<div class="container">
+				<div class="eight columns">&copy;  || Blog powered by <a href="http://getpelican.com">Pelican</a></div>
+					<div class="eight columns">
+						<ul class="social-icons-footer">
+								<li>
+									<a href="#" class="tooltip top" title="Empty">
+										<i class="icon-empty"></i>
+									</a>
+								</li>
+							<li><a href="/None" class="tooltip top" title="RSS"><i class="icon-rss"></i></a></li>
+						</ul>
+					</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Footer Bottom / End -->
+
+	<!-- Javascripts -->
+	<script src="/theme/js/jquery.min.js"></script>
+	</body>
+</html>

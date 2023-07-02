@@ -1,0 +1,509 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8 ]><html class="ie ie8" lang="chinese (simplified)"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="chinese (simplified)">
+<!--<![endif]-->
+	<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="author" content="losuffi">
+
+
+        <title>Losuffi's Blog - Unity傅里叶变换的应用——真实海平面模拟</title>
+
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="/theme/css/style.css">
+
+        <!-- Custom CSS -->
+        	<link rel="stylesheet" href="/theme/css/colors/blue.css" id="colors">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+
+        <meta name="tags" contents="[algorithm]" />
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Losuffi's Blog">
+
+	<meta property="og:type" content="article">
+	<meta property="article:author" content="">
+	<meta property="og:url" content="/unityfu-li-xie-bian-huan-de-ying-yong-zhen-shi-hai-ping-mian-mo-ni.html">
+	<meta property="og:title" content="Unity傅里叶变换的应用——真实海平面模拟">
+	<meta property="og:description" content="">
+	   <meta property="og:image" content="/images/guilherme-toti.jpg">
+	<meta property="article:published_time" content="2018-10-16 00:02:37+02:00">
+	</head>
+	<body>
+		<header id="header">
+			<!-- Container -->
+			<div class="container">
+				<!-- Logo / Mobile Menu -->
+				<div class="five columns">
+					<div id="textlogo">
+						<h1><a href="/">Losuffi's Blog</a></h1>
+					</div>
+				</div>
+						<!-- Navigation
+				================================================== -->
+				<div class="eleven columns">
+
+					<nav id="navigation" class="menu">
+						<ul id="responsive">
+
+							<li><a href="/">Home</a></li>
+
+
+						</ul>
+					</nav>
+				</div>
+			</div>
+			<!-- Container / End -->
+		</header>
+		<!-- Header / End -->
+
+		<!-- Breadcrumbs Container-->
+		<div id="content-wrapper">
+			<section id="titlebar">
+				<!-- Container -->
+				<div class="container">
+				<div class="thirteen columns">
+					<nav id="breadcrumbs">
+						<ul>
+							<li>You are here:</li>
+							<li><a href="/">Home</a></li>
+<li><a href="/category/misc.html">misc</a></li>
+<li>Unity傅里叶变换的应用——真实海平面模拟</li>
+						</ul>
+					</nav>
+				</div>
+				</div>
+				<!-- Container / End -->
+			</section>
+
+			<div class="container">
+	<div class="twelve alt columns">
+<article class="post" style="margin: 0; border: 0;">
+
+	<div class="post-format">
+		<div class="circle"><i class="icon-pencil"></i><span></span></div>
+	</div>
+
+	<section class="post-content">
+
+		<header class="meta">
+			<h2><a href="/unityfu-li-xie-bian-huan-de-ying-yong-zhen-shi-hai-ping-mian-mo-ni.html">Unity傅里叶变换的应用——真实海平面模拟</a></h2>
+			<ul>
+				<li>By <a href="/author/losuffi.html">losuffi</a></li>
+				<li>周二 16 十月 2018</li>
+			</ul>
+		</header>
+
+		<blockquote>
+<p>傅里叶变换的定义描述，网上可以找到很多资源。而且讲得也很好懂。所以，在这篇文章中，不会大篇幅介绍傅里叶变换，假定了读者对傅里叶变换有了一定的了解。本篇的重点是，如何利用傅里叶变换的原理，在Unity游戏引擎中进行实际的应用。</p>
+</blockquote>
+<!-- more -->
+
+<p>[TOC]</p>
+<h2>傅里叶变换的算法</h2>
+<p>就笔者而言，傅里叶变换的算法了解两种。一种是基本的遵循离散傅里叶公式，使用穷举计算所有元素的（DFT）。另一种是在遵循该公式的前提下，利用复数的性质，使用分治法进行迭代的快速傅里叶算法（FFT）。</p>
+<h3>1. DFT方法</h3>
+<p>该方法没什么技巧可言。属于看到离散傅里叶公式，直接用代码描述的过程。</p>
+<p>离散傅里叶公式如下：
+</p>
+<div class="math">$$
+F(k)=\sum_{n=0}^{N}f(n)*e^{\frac{-j2\Pi nk}{N}}
+$$</div>
+<p>依照公式可以写下如下的python的DFT代码：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">cmath</span> <span class="kn">import</span> <span class="n">exp</span><span class="p">,</span><span class="n">pi</span>
+<span class="n">ex</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">def</span> <span class="nf">dft</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="n">F</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">N</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">s</span><span class="o">=</span><span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="n">s</span><span class="o">+=</span><span class="n">f</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">*</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="n">j</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">n</span><span class="o">*</span><span class="n">k</span><span class="o">/</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">F</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">F</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dft</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span>
+</code></pre></div>
+
+<p>显而易见这是一个时间复杂度为O(n^2)的算法，在理解该方法后，能对傅里叶有更好的认识。</p>
+<h3>2.FFT方法</h3>
+<p>该方法使用分治思想，能将复杂度降到O（nlogn）。FFT 算法分为两种</p>
+<p>N为输入序列的长度</p>
+<ul>
+<li>对N等于2的整数次幂的算法</li>
+<li>基2算法</li>
+<li>基4算法</li>
+<li>......</li>
+<li>N不等于2的整数次幂的算法</li>
+<li>Winagrad算法</li>
+<li>素因子算法</li>
+<li>......</li>
+</ul>
+<h4>算法思路</h4>
+<h5>1. 性质</h5>
+<p>首先定义：
+</p>
+<div class="math">$$
+W_{N}^{nk}=e^{\frac{-j2\Pi nk}{N}}
+$$</div>
+<p>
+四个可用性质：</p>
+<ul>
+<li>
+<p>周期性
+  <div class="math">$$
+  W_{N}^{nk}=W_{N}^{(N+n)k}=W_{N}^{n(N+k)}
+  $$</div>
+</p>
+</li>
+<li>
+<p>对称性​  <br>
+<div class="math">$$
+  (W_{N}^{nk})^-(-代表共轭)=W_{N}^{-nk}=W_{N}^{(N-n)k}=W_{N}^{n(N-k)}
+  $$</div>
+</p>
+</li>
+<li>
+<p>可约性
+  <div class="math">$$
+  W_{N}^{nk}=W_{mN}^{mnk}=W_{N/m}^{nk/m}
+  $$</div>
+</p>
+</li>
+<li>
+<p>特殊点
+  <div class="math">$$
+  \begin{split}
+  W_{N}^{0}&amp;=1
+  \\W_{N}^{N/2}&amp;=-1
+  \\W_{N}^{k+N/2}&amp;=-W_{N}^{k}
+  \end{split}
+  $$</div>
+</p>
+</li>
+</ul>
+<p>四种性质的证明，不是太难，利用欧拉公式转换成三角函数就非常明了了。</p>
+<p>首先欧拉公式如下：
+</p>
+<div class="math">$$
+e^{jx}=\cos{x}+j\sin{x}
+$$</div>
+<p>
+以周期性为例。
+</p>
+<div class="math">$$
+W_{N}^{nk}=e^{\frac{-j2\Pi nk}{N}}=cos{(\frac{-nk}{N}2\Pi)}+sin(\frac{-nk}{N}2\Pi)
+$$</div>
+<div class="math">$$
+\begin{align}
+W_{N}^{(N+n)k} &amp; =  cos{(\frac{-nk-Nk}{N}2\Pi)}+jsin{(\frac{-nk-Nk}{N}2\Pi)}
+\\\\ &amp;=cos(\frac{-nk}{N}2\Pi-k2\Pi)+jsin{(\frac{-nk}{N}}2\Pi-k2\Pi)
+\\\\ &amp;=cos(\frac{-nk}{N}2\Pi)+jsin{(\frac{-nk}{N}2\Pi)}
+\\\\ &amp;=W_{N}^{nk}
+\end{align}
+$$</div>
+<p>其他性质证明大同小异，是来自三角函数的性质</p>
+<h5>2.思路</h5>
+<p>利用上述性质，进行迭代，将DFT分解成更小的DFT计算，合并重复计算。</p>
+<p>算法有两条路线</p>
+<ul>
+<li>时间抽取</li>
+<li>频率抽取</li>
+</ul>
+<p>按“基数”不同可以分成</p>
+<ul>
+<li>基-2FFT算法</li>
+<li>基-4FFT算法</li>
+<li>混合基算法</li>
+<li>分裂基算法</li>
+</ul>
+<p>本篇描述是以时间抽取的基-2FFT算法，如果读者对其他算法感兴趣，可以在理解原理后，去查阅相关材料。</p>
+<h5>3.算法步骤：时间抽取的基-2FFT</h5>
+<ul>
+<li>
+<p>保证输入序列的长度为2的整数幂次。如4、128、512等，序列长度不满足时，补空项。</p>
+</li>
+<li>
+<p>将输入序列按索引分成奇偶两组
+  <div class="math">$$
+  \begin{align}
+  \\\\ 偶序列 f_1(i) &amp;=f(2i)
+  \\\\ 奇序列 f_2(i) &amp;=f(2i+1)
+  \\\\ i&amp;=0,1...,\frac{N}{2}-1
+  \end{align}
+  $$</div>
+</p>
+</li>
+<li>
+<p>利用性质，进行分治迭代，一直分奇偶两组，直到序列项数为1(N=1)，无法再分。此时单项的傅里叶变换F(0)=f(n)。</p>
+</li>
+</ul>
+<div class="math">$$
+\begin{align}
+F(k)&amp;=\sum_{n=0}^{N-1}f(n)W_N^{nk}=\sum_{r=0}^{N/2-1}f(2r)W_N^{2rk}+\sum_{r=0}^{N/2-1}f(2r+1)W_N^{（2r+1）k}\\\\
+&amp;=\sum_{r=0}^{N/2-1}f(2r)W_{N/2}^{rk}+W_N^k\sum_{r=0}^{N/2-1}f(2r+1)W_{N/2}^{rk}\\\\
+&amp;=F_1(k)+W_N^kF_2(k)
+\end{align}
+$$</div>
+<ul>
+<li>到这一步，已经按照上述三个步骤。已经能写出代码了。示例 Python代码如下：</li>
+</ul>
+<p><code>python
+  from cmath import exp,pi
+  from cmath import log
+  ex=[1.0,1.0,1.0,0]
+  def fft(f,l):
+      N=len(f)
+      if N&lt;=1：
+        return [f[0] for k in range(l)]
+      even=fft(f[0::2],l) #偶数序列部分
+      odd=fft(f[1::2],l) #奇数序列部分
+      T=[exp(-2j*pi*k/N)*odd[k] for k in range(N)]
+      return [even[k]+T[k] for k in range(l)]
+  print(fft(ex,4))</code></p>
+<ul>
+<li>
+<p>但是显而易见，如果仅仅只是这样并没有改变时间复杂度。依旧与穷举法一致，但通过观察，该算法可知道，其实这里面很多数值是重复的。比如当N=1时，需要返回l个f[0]。仅仅是为了占位。观察后，如果我们算法将重复的值只计算一次。那么复杂度将降到O(nlogn)</p>
+</li>
+<li>
+<p>我们还需要一条性质——周期性：当N=1时，k=2时。依照周期性则F(2)=F(1)</p>
+</li>
+</ul>
+<div class="math">$$
+  \begin{align}
+  例子：N&amp;=4;k=7
+  \\\\F(7)&amp;=F(7-4)=F(3)
+  \\\\=&gt;F(N+l)&amp;=F(l)
+  \\\\F(k)&amp;=F_1(k)+W_N^kF_2(k)
+  \\\\k&amp;=0,1,...,N-1(上述代码依此实现)
+  \\\\利用周期性，&amp;k可以只取到N/2-1，也可以得到同样的结果
+  \\\\F(k)&amp;=F_1(k)+W_N^kF_2(k)
+  \\\\W_N^{k+N/2}&amp;=-W_N^k(化成三角函数，证明即可)
+  \\\\F(k+N/2)&amp;=F_1(k)-W_N^kF_2(k)
+  \\\\k&amp;=0,1,2...N/2-1
+  \end{align}
+$$</div>
+<p>​ 如此，每一层的分治，计算量将能够分成前半部，和后半部。而只要求出前半部，后半部也可以表示出来。这样就可以得到整个序列。且，时间复杂度降到了O(nlogn)</p>
+<ul>
+<li>
+<p>该算法，因为其运算方式的流程图像，就像一只蝴蝶。所以又叫做蝶形运算。</p>
+</li>
+<li>
+<p>该算法的Python代码例子如下：</p>
+</li>
+</ul>
+<p><code>python
+  from cmath import exp,pi
+  from cmath import log
+  ex=[1.0,1.0,1.0,0]
+  def fft(f):
+      N=len(f)
+      if N&lt;=1：
+        return f #每次减去一半长度，到单一序列，长度正好为1
+      even=fft(f[0::2]) #偶数序列部分
+      odd=fft(f[1::2]) #奇数序列部分
+      T=[exp(-2j*pi*k/N)*odd[k] for k in range(N//2)] #只需要一半
+      return [even[k]+T[k] for k in range(N//2)]+[even[k]-T[k] for k in range(N//2)]
+  print(fft(ex))</code></p>
+<h5>4.逆变换IFFT</h5>
+<p>​   在计算出FFT后，推导IFFT就比较简单了。因为FFT和IFFT在计算公式上有很大的相似性
+</p>
+<div class="math">$$
+\begin{align}
+&amp; DFT: F(k)=\sum_{n=0}^{N-1}f(n)W_N^{nk}
+\\\\&amp; IDFT:f(n)=\frac{1}{N}\sum_{k=0}^{N-1}F(k)W_N^{-nk}
+\end{align}
+$$</div>
+<p>
+显而易见，逆变换与正变换，在运算上只有两点不同，一是系数1/N,二是旋转因子为共轭变换。
+</p>
+<div class="math">$$
+\begin{align}
+&amp;依照对称性，可知 W_N^{-nk}=(W_N^{nk})^{-}
+\\\\&amp;复数乘法 已知 (A+Bi)●（C+Di)=(X+Yi)
+\\\\&amp;那么如何得到（X-Yi)呢？即（X+Yi）的共轭
+\\\\&amp;显而易见，依照复数乘法性质。即（A-Bi）和（C-Di）相乘即可。
+\\\\=&gt;&amp; f(n)=\frac{1}{N}\sum_{k=0}^{N-1}F(k)W_N^{-nk}
+\\\\=&gt;&amp; {f(n)}^-=\frac{1}{N}\sum_{k=0}^{N-1}{F(k)}^-W_N^{nk}
+\\\\=&gt;&amp; f(n)=\frac{1}{N}{\sum_{k=0}^{N-1}{fft(F(k)}^-)}^-
+\end{align}
+$$</div>
+<p>
+如上所示。只需要在输入傅里叶序列进行一次共轭。再进行fft，结果乘上系数以及再次共轭。即可求出序列的逆变换。</p>
+<p>示例Python代码如下。承接上述fft代码:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">ifft</span><span class="p">(</span><span class="n">F</span><span class="p">):</span>
+    <span class="n">N</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+    <span class="n">F</span><span class="o">=</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">F</span><span class="p">]</span> <span class="c1">#对输入的傅里叶变换序列 进行共轭运算</span>
+    <span class="n">F</span><span class="o">=</span><span class="n">fft</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="c1">#利用已经写好的fft函数进行运算</span>
+    <span class="n">F</span><span class="o">=</span><span class="p">[(</span><span class="n">k</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">/</span><span class="n">N</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">F</span><span class="p">]</span> <span class="c1">#得到结果</span>
+    <span class="k">return</span> <span class="n">F</span>
+<span class="n">F</span><span class="o">=</span><span class="n">fft</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ifft</span><span class="p">(</span><span class="n">F</span><span class="p">))</span>
+</code></pre></div>
+
+<h2>Unity的傅里叶变换实现</h2>
+<blockquote>
+<p>到这一步，快速傅里叶的算法思路，就已经介绍完了。接下来就是，将这套算法移植到Unity中。使用GPU编程，对图像进行傅里叶变换。</p>
+</blockquote>
+<h4>ComputeShader</h4>
+<p>本篇的傅里叶实现，核心是使用ComputeShader，进行实时的傅里叶变换。CPU的傅里叶实现，基本上与Python的实现差不多，只需要将python的例子，移植到C#语言上就没有问题了。但是实时的话，还是利用GPU来运算效率会更高。</p>
+<p>Unity的ComputeShader的基本使用，在本篇文章中假定了读者对其有了一定了解，不再做详细的介绍。不熟悉的读者可查阅相关关键词。</p>
+<p>ComputeShader本身语法与Shader区别不大。不过ComputeShader比起Shader，设计上主要是针对并行计算。</p>
+<h5>CS的关键性质</h5>
+<ul>
+<li>CS的代码执行，首先分线程组。C#中对应API为ComputeShader.Dispatch(int i,int x,int y, int z)。x,y,z可由调用者，自行分配。</li>
+<li>每一组中可并行执行多个线程，在CS里使用[numthread(x,y,z)]来分配线程组中的线程数。</li>
+<li>在同一个线程组中的线程，可以抽象的认为是并行的，所以线程的调用顺序是不可知的，即6号线程可能先执行再执行1号线程。在Unity中可定义的线程数的极限是1024个</li>
+<li>同一个线程组有办法做到共享内存，内存大小为32KB</li>
+<li>函数中可以调用线程等待函数，即线程运行到等待函数后，被挂起，在同一个线程组中的线程都运行到该处后，才能继续执行下去</li>
+</ul>
+<p>这五点，对于ComputeShader特别关键。本篇介绍得比较粗糙，如果读者不懂，必须要查阅资料弄明白，才能理解接下来的示例。</p>
+<h5>二维傅里叶变换</h5>
+<blockquote>
+<p>未完，待更！</p>
+</blockquote>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+		    <div class="tags">
+		        <p>tags: <a href="/tag/algorithm.html">[algorithm]</a></p>
+		    </div>
+
+<div class="sharing">
+</div>
+<hr>
+
+	</section>
+	<div class="clearfix"></div>
+
+</article>
+
+	</div>
+
+	<!-- Sidebar -->
+	<div class="four columns">
+
+		<!-- Categories -->
+		<div class="widget">
+			<h3 class="headline">Categories</h3><span class="line"></span><div class="clearfix"></div>
+			<nav class="categories">
+				<ul>
+					    <li class="active"><a href="/category/misc.html">misc</a></li>
+				</ul>
+			</nav>
+		</div>
+		
+		<!-- Tags -->
+		<div class="widget">
+			<h3 class="headline">Tags</h3><span class="line"></span><div class="clearfix"></div>
+			<nav class="tags">				    <a href="/tag/algorithm.html">[algorithm]</a>
+				    <a href="/tag/log.html">[Log]</a>
+				    <a href="/tag/photograph.html">[photograph]</a>
+				    <a href="/tag/tu-xing.html">[图形]</a>
+			</nav>
+		</div>
+	</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Content Wrapper / End -->
+
+		<div id="footer-bottom">
+			<!-- Container -->
+			<div class="container">
+				<div class="eight columns">&copy;  || Blog powered by <a href="http://getpelican.com">Pelican</a></div>
+					<div class="eight columns">
+						<ul class="social-icons-footer">
+								<li>
+									<a href="#" class="tooltip top" title="Empty">
+										<i class="icon-empty"></i>
+									</a>
+								</li>
+							<li><a href="/None" class="tooltip top" title="RSS"><i class="icon-rss"></i></a></li>
+						</ul>
+					</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Footer Bottom / End -->
+
+	<!-- Javascripts -->
+	<script src="/theme/js/jquery.min.js"></script>
+	</body>
+</html>

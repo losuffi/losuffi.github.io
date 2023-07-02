@@ -1,0 +1,211 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8 ]><html class="ie ie8" lang="chinese (simplified)"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="chinese (simplified)">
+<!--<![endif]-->
+	<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="author" content="losuffi">
+
+
+        <title>Losuffi's Blog - Paxel渲染管线搭建</title>
+
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="/theme/css/style.css">
+
+        <!-- Custom CSS -->
+        	<link rel="stylesheet" href="/theme/css/colors/blue.css" id="colors">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+
+        <meta name="tags" contents="[log]" />
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Losuffi's Blog">
+
+	<meta property="og:type" content="article">
+	<meta property="article:author" content="">
+	<meta property="og:url" content="/paxelxuan-ran-guan-xian-da-jian.html">
+	<meta property="og:title" content="Paxel渲染管线搭建">
+	<meta property="og:description" content="">
+	   <meta property="og:image" content="/images/guilherme-toti.jpg">
+	<meta property="article:published_time" content="2019-12-05 00:57:43+01:00">
+	</head>
+	<body>
+		<header id="header">
+			<!-- Container -->
+			<div class="container">
+				<!-- Logo / Mobile Menu -->
+				<div class="five columns">
+					<div id="textlogo">
+						<h1><a href="/">Losuffi's Blog</a></h1>
+					</div>
+				</div>
+						<!-- Navigation
+				================================================== -->
+				<div class="eleven columns">
+
+					<nav id="navigation" class="menu">
+						<ul id="responsive">
+
+							<li><a href="/">Home</a></li>
+
+
+						</ul>
+					</nav>
+				</div>
+			</div>
+			<!-- Container / End -->
+		</header>
+		<!-- Header / End -->
+
+		<!-- Breadcrumbs Container-->
+		<div id="content-wrapper">
+			<section id="titlebar">
+				<!-- Container -->
+				<div class="container">
+				<div class="thirteen columns">
+					<nav id="breadcrumbs">
+						<ul>
+							<li>You are here:</li>
+							<li><a href="/">Home</a></li>
+<li><a href="/category/misc.html">misc</a></li>
+<li>Paxel渲染管线搭建</li>
+						</ul>
+					</nav>
+				</div>
+				</div>
+				<!-- Container / End -->
+			</section>
+
+			<div class="container">
+	<div class="twelve alt columns">
+<article class="post" style="margin: 0; border: 0;">
+
+	<div class="post-format">
+		<div class="circle"><i class="icon-pencil"></i><span></span></div>
+	</div>
+
+	<section class="post-content">
+
+		<header class="meta">
+			<h2><a href="/paxelxuan-ran-guan-xian-da-jian.html">Paxel渲染管线搭建</a></h2>
+			<ul>
+				<li>By <a href="/author/losuffi.html">losuffi</a></li>
+				<li>周四 05 十二月 2019</li>
+			</ul>
+		</header>
+
+		<hr>
+<h2>Paxel</h2>
+<h3>描述之前的工作</h3>
+<ul>
+<li>接入第三方开源Log模块spdlog</li>
+<li>接入第三方开源全平台窗口管理模块GLFW</li>
+<li>接入Vulkan库，并与GLFW联系起来，创建窗口</li>
+</ul>
+<!-- more -->
+
+<h3>当前的代码结构</h3>
+<div class="highlight"><pre><span></span><code><span class="n">Main</span><span class="o">-&gt;</span><span class="n">Application</span><span class="o">:</span><span class="w"> </span><span class="n">CreateApplication</span>
+<span class="n">Note</span><span class="w"> </span><span class="n">over</span><span class="w"> </span><span class="n">Application</span><span class="p">,</span><span class="n">GameBox</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Application</span><span class="w"> </span><span class="n">While</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="n">Gamebox</span><span class="o">--&gt;</span><span class="n">Update</span>
+<span class="n">Application</span><span class="o">-&gt;</span><span class="n">Window</span><span class="o">:</span><span class="w"> </span><span class="n">New</span><span class="w"> </span><span class="n">Window</span>
+<span class="n">Application</span><span class="o">-&gt;</span><span class="n">GameBox</span><span class="o">:</span><span class="w"> </span><span class="n">New</span><span class="w"> </span><span class="n">GameBox</span>
+<span class="n">Window</span><span class="o">--&gt;</span><span class="n">GameBox</span><span class="o">:</span><span class="w"> </span><span class="n">GameBox</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">Window</span>
+<span class="n">GameBox</span><span class="o">-&gt;</span><span class="n">Window</span><span class="o">:</span><span class="w"> </span><span class="n">Update</span><span class="w"> </span><span class="n">Window</span>
+<span class="n">Window</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="n">GLFWindow</span><span class="o">*</span><span class="w"> </span><span class="n">origin</span><span class="o">:</span><span class="w"> </span><span class="n">Handle</span>
+<span class="n">Window</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="n">RenderCore</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Handle</span>
+<span class="n">Rendercore</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="n">VulkanPart</span><span class="w"> </span><span class="o">:</span><span class="n">Follow</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="n">graph</span><span class="w"> </span><span class="n">TD</span>
+<span class="n">A</span><span class="o">[</span><span class="n">Main</span><span class="o">]</span><span class="w"> </span><span class="o">--&gt;</span><span class="n">B</span><span class="p">(</span><span class="n">Application</span><span class="p">)</span>
+<span class="n">B</span><span class="o">--&gt;|</span><span class="k">While</span><span class="o">|</span><span class="n">C</span><span class="p">(</span><span class="n">GameBox</span><span class="p">)</span>
+<span class="n">C</span><span class="o">--&gt;|</span><span class="k">Create</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="k">Update</span><span class="o">|</span><span class="n">D</span><span class="p">(</span><span class="k">Window</span><span class="p">)</span>
+<span class="n">D</span><span class="o">--&gt;</span><span class="n">E</span><span class="p">(</span><span class="n">RenderCore</span><span class="p">)</span>
+<span class="n">E</span><span class="o">--&gt;</span><span class="n">G</span><span class="p">(</span><span class="n">GLFWindow</span><span class="o">*</span><span class="w"> </span><span class="n">origin</span><span class="p">)</span>
+<span class="n">E</span><span class="o">--&gt;</span><span class="n">H</span><span class="p">(</span><span class="n">Vulkan</span><span class="w"> </span><span class="n">Part</span><span class="p">)</span>
+<span class="n">H</span><span class="o">--&gt;</span><span class="n">G</span>
+<span class="n">D</span><span class="c1">--&gt;|Set KeyEvent|G</span>
+</code></pre></div>
+		    <div class="tags">
+		        <p>tags: <a href="/tag/log.html">[log]</a></p>
+		    </div>
+
+<div class="sharing">
+</div>
+<hr>
+
+	</section>
+	<div class="clearfix"></div>
+
+</article>
+
+	</div>
+
+	<!-- Sidebar -->
+	<div class="four columns">
+
+		<!-- Categories -->
+		<div class="widget">
+			<h3 class="headline">Categories</h3><span class="line"></span><div class="clearfix"></div>
+			<nav class="categories">
+				<ul>
+					    <li class="active"><a href="/category/misc.html">misc</a></li>
+				</ul>
+			</nav>
+		</div>
+		
+		<!-- Tags -->
+		<div class="widget">
+			<h3 class="headline">Tags</h3><span class="line"></span><div class="clearfix"></div>
+			<nav class="tags">				    <a href="/tag/algorithm.html">[algorithm]</a>
+				    <a href="/tag/log.html">[Log]</a>
+				    <a href="/tag/photograph.html">[photograph]</a>
+				    <a href="/tag/tu-xing.html">[图形]</a>
+			</nav>
+		</div>
+	</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Content Wrapper / End -->
+
+		<div id="footer-bottom">
+			<!-- Container -->
+			<div class="container">
+				<div class="eight columns">&copy;  || Blog powered by <a href="http://getpelican.com">Pelican</a></div>
+					<div class="eight columns">
+						<ul class="social-icons-footer">
+								<li>
+									<a href="#" class="tooltip top" title="Empty">
+										<i class="icon-empty"></i>
+									</a>
+								</li>
+							<li><a href="/None" class="tooltip top" title="RSS"><i class="icon-rss"></i></a></li>
+						</ul>
+					</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Footer Bottom / End -->
+
+	<!-- Javascripts -->
+	<script src="/theme/js/jquery.min.js"></script>
+	</body>
+</html>
