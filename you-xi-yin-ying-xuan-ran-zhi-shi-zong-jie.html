@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8 ]><html class="ie ie8" lang="chinese (simplified)"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="chinese (simplified)">
+<!--<![endif]-->
+	<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="author" content="losuffi">
+
+
+        <title>Losuffi's Blog - 游戏阴影渲染知识总结</title>
+
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="/theme/css/style.css">
+
+        <!-- Custom CSS -->
+        	<link rel="stylesheet" href="/theme/css/colors/blue.css" id="colors">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+
+        <meta name="tags" contents="图形" />
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Losuffi's Blog">
+
+	<meta property="og:type" content="article">
+	<meta property="article:author" content="">
+	<meta property="og:url" content="/you-xi-yin-ying-xuan-ran-zhi-shi-zong-jie.html">
+	<meta property="og:title" content="游戏阴影渲染知识总结">
+	<meta property="og:description" content="">
+	   <meta property="og:image" content="/images/guilherme-toti.jpg">
+	<meta property="article:published_time" content="2023-07-02 20:40:50+02:00">
+	</head>
+	<body>
+		<header id="header">
+			<!-- Container -->
+			<div class="container">
+				<!-- Logo / Mobile Menu -->
+				<div class="five columns">
+					<div id="textlogo">
+						<h1><a href="/">Losuffi's Blog</a></h1>
+					</div>
+				</div>
+						<!-- Navigation
+				================================================== -->
+				<div class="eleven columns">
+
+					<nav id="navigation" class="menu">
+						<ul id="responsive">
+
+							<li><a href="/">Home</a></li>
+
+
+						</ul>
+					</nav>
+				</div>
+			</div>
+			<!-- Container / End -->
+		</header>
+		<!-- Header / End -->
+
+		<!-- Breadcrumbs Container-->
+		<div id="content-wrapper">
+			<section id="titlebar">
+				<!-- Container -->
+				<div class="container">
+				<div class="thirteen columns">
+					<nav id="breadcrumbs">
+						<ul>
+							<li>You are here:</li>
+							<li><a href="/">Home</a></li>
+<li><a href="/category/ji-zhu-zhi-shi.html">技术知识</a></li>
+<li>游戏阴影渲染知识总结</li>
+						</ul>
+					</nav>
+				</div>
+				</div>
+				<!-- Container / End -->
+			</section>
+
+			<div class="container">
+	<div class="twelve alt columns">
+<article class="post" style="margin: 0; border: 0;">
+
+	<div class="post-format">
+		<div class="circle"><i class="icon-pencil"></i><span></span></div>
+	</div>
+
+	<section class="post-content">
+
+		<header class="meta">
+			<h2><a href="/you-xi-yin-ying-xuan-ran-zhi-shi-zong-jie.html">游戏阴影渲染知识总结</a></h2>
+			<ul>
+				<li>By <a href="/author/losuffi.html">losuffi</a></li>
+				<li>周日 02 七月 2023</li>
+			</ul>
+		</header>
+
+		<hr>
+<blockquote>
+<p>总结一下目前了解到的游戏渲染中，对于阴影的处理方式。笔者目前是使用的是UE引擎的一名码农，所以图谱也以，目前UE里看见的阴影技术为基础往外拓展。尽量做到将笔者所见到听到的阴影技术都囊括其中。</p>
+</blockquote>
+<!-- more -->
+
+<div class="highlight"><pre><span></span><code>阴影与光照，一直是贯穿游戏渲染的核心主题，两者相辅相成，在3D游戏中，两者是构成精美画面最重要的一环。当然也是对于图形程序员来说，一个特别困难的任务。对于阴影而言，其困难之处主要包括：软阴影、阴影数据存储、投影方式等。
+</code></pre></div>
+
+<h2>1. Shadow Map</h2>
+<div class="highlight"><pre><span></span><code>对于当前的商业游戏引擎来说，Shadow Map，在阴影渲染技术中，属于一个最基础的方案，无论Unity 还是UE，默认的阴影方案，都是基于Shadow Map的。其核心思路是：在片元着色之前预先在光源空间中，生成一张阴影深度贴图，在片元着色阶段生成最终颜色时，读取阴影深度贴图，来得到片元是否在阴影之中的信息，进而表现出阴影着色的效果。
+
+综上，可以优先确认其方案在实时渲染中的一些困难之处：
+    1. 分辨率问题，生成的Shadow Depth Map，其分辨率不可能无限大，在有限的分辨率下，如何保存一帧中，当前画面所有片元的阴影深度信息，使得其阴影信息足够精确（想象较远处，一棵树的树叶的阴影）
+    2. 锯齿问题，由1，很自然能想到，即使在可见区域较小，依然会存在阴影边缘处的锯齿问题
+</code></pre></div>
+
+<h3>1.1 Cascade Shadow Map</h3>
+<div class="highlight"><pre><span></span><code>对于第1个问题，通用的解决方案是Cascade Shadow Map。Cascade 并没有从源头解决分辨率不能无限的问题，只是一种将Shadow Map把分辨率分级的方式，类似LOD。从人的观察方式来说，近处一般需要更多细节，而远处本身看不清楚，需要的细节更少，以UE为例，将Shadow Map 分成4级，每一级的分辨率降低4（2x2）倍，根据距离不同，读取不同级别分辨率的Shadow Map。
+</code></pre></div>
+
+<h3>1.2 PCF</h3>
+<div class="highlight"><pre><span></span><code>对于第二个问题，在采样Shadow Depth 时，使用PCF的方案是一种常见的方式，PCF全称为：Percentage Close Filter，是一种过滤方式，在采样Shadow Depth时，同时取相邻像素的多个Shadow Depth，并分别于片元深度进行比较，然后加权累加，与之前非0即1的答案相比，在Shadow 边缘处，可以得到一个（0-1）之间的浮点值，平滑边缘。
+</code></pre></div>
+		    <div class="tags">
+		        <p>tags: <a href="/tag/tu-xing.html">图形</a></p>
+		    </div>
+
+<div class="sharing">
+</div>
+<hr>
+
+	</section>
+	<div class="clearfix"></div>
+
+</article>
+
+	</div>
+
+	<!-- Sidebar -->
+	<div class="four columns">
+
+		<!-- Categories -->
+		<div class="widget">
+			<h3 class="headline">Categories</h3><span class="line"></span><div class="clearfix"></div>
+			<nav class="categories">
+				<ul>
+					    <li class="active"><a href="/category/ji-zhu-zhi-shi.html">技术知识</a></li>
+					    <li><a href="/category/kai-fa-ri-zhi.html">开发日志</a></li>
+					    <li><a href="/category/sheng-huo-ji-lu.html">生活记录</a></li>
+				</ul>
+			</nav>
+		</div>
+		
+		<!-- Tags -->
+		<div class="widget">
+			<h3 class="headline">Tags</h3><span class="line"></span><div class="clearfix"></div>
+			<nav class="tags">				    <a href="/tag/log.html">Log</a>
+				    <a href="/tag/she-ying.html">摄影</a>
+				    <a href="/tag/suan-fa.html">算法</a>
+				    <a href="/tag/tu-xing.html">图形</a>
+			</nav>
+		</div>
+	</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Content Wrapper / End -->
+
+		<div id="footer-bottom">
+			<!-- Container -->
+			<div class="container">
+				<div class="eight columns">&copy;  || Blog powered by <a href="http://getpelican.com">Pelican</a></div>
+					<div class="eight columns">
+						<ul class="social-icons-footer">
+								<li>
+									<a href="#" class="tooltip top" title="Empty">
+										<i class="icon-empty"></i>
+									</a>
+								</li>
+							<li><a href="/None" class="tooltip top" title="RSS"><i class="icon-rss"></i></a></li>
+						</ul>
+					</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Footer Bottom / End -->
+
+	<!-- Javascripts -->
+	<script src="/theme/js/jquery.min.js"></script>
+	</body>
+</html>
