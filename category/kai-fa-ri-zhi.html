@@ -10,7 +10,7 @@
         <meta name="author" content="losuffi">
 
 
-        <title>Losuffi's Blog - Articles by losuffi</title>
+        <title>Losuffi's Blog - Articles in 开发日志 category</title>
 
 
         <!-- CSS -->
@@ -71,8 +71,8 @@
 						<ul>
 							<li>You are here:</li>
 							<li><a href="/">Home</a></li>
-<li><a href="/authors.html">Authors</a></li>
-<li>Articles by losuffi</li>
+<li><a href="/categories.html">Categories</a></li>
+<li>开发日志</li>
 						</ul>
 					</nav>
 				</div>
@@ -87,18 +87,80 @@
 			<div class="twelve columns">
 				<section class="post-content">
 					<header class="meta">
-						<h2><a href="/gang-kai-shi-de-yi-xie-hua.html" rel="bookmark" title="Permalink to 刚开始的一些话">刚开始的一些话</a></h2>
+						<h2><a href="/vulkan-imgui-zhong-de-helloworldliu-cheng.html" rel="bookmark" title="Permalink to Vulkan & ImGUI 中的HelloWorld流程">Vulkan & ImGUI 中的HelloWorld流程</a></h2>
 						<ul>
 							<li>By <a href="/author/losuffi.html">losuffi</a></li>
-							<li>周一 08 十月 2018</li>
-							<li><a href="/category/misc">misc</a></li>
+							<li>周四 28 五月 2020</li>
+							<li><a href="/category/开发日志">开发日志</a></li>
 						</ul>
 					</header>
 					<p>
 							<blockquote>
-<p>这是放到github page 写的第一篇文章。本来在csdn写的文章，想了想，没写几篇，而且现在觉得写得并不好，就不在想搬过来了。所以这也就是一 …</p></blockquote>
+<p>基于Vulkan+ImGUI的正常工作流开发记录</p>
+</blockquote>
+<p>流程总纲：
+1. 创建GLFWWindow
+2. 初始化Vulkan设备：
+   1. Vulkan Instance
+   2. Select GPU
+   3. Select graphics queue family
+   4. Create Logical Device (with 1 queue)
+   5. Create Descriptor Pool
+3....
 	        		</p>
-					<a href="/gang-kai-shi-de-yi-xie-hua.html" class="button color">Read More</a>
+					<a href="/vulkan-imgui-zhong-de-helloworldliu-cheng.html" class="button color">Read More</a>
+				</section>
+			</div>
+			<div class="clearfix"></div>
+		</article>
+		<!-- Post -->
+		<article class="post medium">
+			<div class="twelve columns">
+				<section class="post-content">
+					<header class="meta">
+						<h2><a href="/vulkanzhong-de-commandbuffer.html" rel="bookmark" title="Permalink to Vulkan中的CommandBuffer">Vulkan中的CommandBuffer</a></h2>
+						<ul>
+							<li>By <a href="/author/losuffi.html">losuffi</a></li>
+							<li>周六 23 五月 2020</li>
+							<li><a href="/category/开发日志">开发日志</a></li>
+						</ul>
+					</header>
+					<p>
+							<h1>Vulkan &amp; Imgui‘s log</h1>
+<h2>Commandbuffers</h2>
+<p>Vulkan 中的Command，比如绘制操作，内存传输等，不是直接通过函数调用来执行的。必须要通过在CommandBuffers中记录Command来执行相应的操作。这样做的好处是，绘制 …</p>
+	        		</p>
+					<a href="/vulkanzhong-de-commandbuffer.html" class="button color">Read More</a>
+				</section>
+			</div>
+			<div class="clearfix"></div>
+		</article>
+		<!-- Post -->
+		<article class="post medium">
+			<div class="twelve columns">
+				<section class="post-content">
+					<header class="meta">
+						<h2><a href="/paxelxuan-ran-guan-xian-da-jian.html" rel="bookmark" title="Permalink to Paxel渲染管线搭建">Paxel渲染管线搭建</a></h2>
+						<ul>
+							<li>By <a href="/author/losuffi.html">losuffi</a></li>
+							<li>周四 05 十二月 2019</li>
+							<li><a href="/category/开发日志">开发日志</a></li>
+						</ul>
+					</header>
+					<p>
+							<hr>
+<h2>Paxel</h2>
+<h3>描述之前的工作</h3>
+<ul>
+<li>接入第三方开源Log模块spdlog</li>
+<li>接入第三方开源全平台窗口管理模块GLFW</li>
+<li>接入Vulkan库，并与GLFW联系起来，创建窗口</li>
+</ul>
+<!-- more -->
+
+<h3>当前的代码结构 …</h3>
+	        		</p>
+					<a href="/paxelxuan-ran-guan-xian-da-jian.html" class="button color">Read More</a>
 				</section>
 			</div>
 			<div class="clearfix"></div>
@@ -108,9 +170,8 @@
 	<nav class="pagination">
 		<ul>
 			<li>
-			        <a href="/author/losuffi.html">Newest Posts &rarr;</a>
 			</li>
-			<!-- Page 2 / 2 -->
+			<!-- Page 1 / 1 -->
 		</ul>
 		<div class="clearfix"></div>
 	</nav>
@@ -125,7 +186,7 @@
 			<nav class="categories">
 				<ul>
 					    <li><a href="/category/ji-zhu-zhi-shi.html">技术知识</a></li>
-					    <li><a href="/category/kai-fa-ri-zhi.html">开发日志</a></li>
+					    <li class="active"><a href="/category/kai-fa-ri-zhi.html">开发日志</a></li>
 					    <li><a href="/category/misc.html">misc</a></li>
 					    <li><a href="/category/sheng-huo-ji-lu.html">生活记录</a></li>
 				</ul>
