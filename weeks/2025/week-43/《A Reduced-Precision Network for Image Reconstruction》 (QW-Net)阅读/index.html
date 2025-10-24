@@ -850,24 +850,24 @@
 <p><em>(图片来源: <a href="https://creativecoding.soe.ucsc.edu/QW-Net/">UCSC QW-Net Project Page</a>)</em></p>
 <hr />
 <h2 id="4">4. 架构的数学表示<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
-<p>如果我们将一个标准的黑盒网络表示为 $I_{out} = \text{Net}(I_{in})$，那么量化它会导致：</p>
-<p>$$
-I_{out} = \text{Net}<em in="in">{\text{INT4}}(I</em>
-$$}) \quad \text{(导致质量崩溃)</p>
+<p>如果我们将一个标准的黑盒网络表示为 <span class="arithmatex">\(I_{out} = \text{Net}(I_{in})\)</span>，那么量化它会导致：</p>
+<div class="arithmatex">\[
+I_{out} = \text{Net}_{\text{INT4}}(I_{in}) \quad \text{(导致质量崩溃)}
+\]</div>
 <p>而 QW-Net 的架构可以被函数式地表示为：</p>
 <ol>
 <li>
-<p><strong>特征提取</strong>: $F = \text{Net}<em in="in">{D, \text{INT4}}(I</em>)$</p>
+<p><strong>特征提取</strong>: <span class="arithmatex">\(F = \text{Net}_{D, \text{INT4}}(I_{in})\)</span></p>
 </li>
 <li>
-<p><strong>核预测</strong>: $K = \text{Net}_{K, \text{FP32}}(F)$</p>
+<p><strong>核预测</strong>: <span class="arithmatex">\(K = \text{Net}_{K, \text{FP32}}(F)\)</span></p>
 </li>
 <li>
-<p><strong>最终重建</strong>: $I_{out} = K \ast \text{Upsample}(I_{low_res})$</p>
+<p><strong>最终重建</strong>: <span class="arithmatex">\(I_{out} = K \ast \text{Upsample}(I_{low\_res})\)</span></p>
 </li>
 </ol>
-<p>其中 $I_{in}$ 是所有输入的集合（低分辨率帧、历史帧等），$F$ 是特征图，$K$ 是预测出的滤波器，$\ast$ 代表动态卷积/滤波操作。</p>
-<p>这个公式清晰地展示了计算负载最大的 $\text{Net}_{D}$ 是如何运行在 INT4 上的，而对质量起决定性作用的 $K$ 和最终的滤波操作 $\ast$ 是如何保持在高精度的。</p>
+<p>其中 <span class="arithmatex">\(I_{in}\)</span> 是所有输入的集合（低分辨率帧、历史帧等），<span class="arithmatex">\(F\)</span> 是特征图，<span class="arithmatex">\(K\)</span> 是预测出的滤波器，<span class="arithmatex">\(\ast\)</span> 代表动态卷积/滤波操作。</p>
+<p>这个公式清晰地展示了计算负载最大的 <span class="arithmatex">\(\text{Net}_{D}\)</span> 是如何运行在 INT4 上的，而对质量起决定性作用的 <span class="arithmatex">\(K\)</span> 和最终的滤波操作 <span class="arithmatex">\(\ast\)</span> 是如何保持在高精度的。</p>
 <h2 id="5">5. 结果与意义<a class="headerlink" href="#5" title="Permanent link">&para;</a></h2>
 <h3 id="a">a. 质量对比<a class="headerlink" href="#a" title="Permanent link">&para;</a></h3>
 <p>QW-Net 成功地在 INT4 精度下达到了与 FP32 版本几乎无法区分的图像质量，并且远超传统的 TAA 和被量化的标准 U-Net。</p>
@@ -928,39 +928,39 @@ $$}) \quad \text{(导致质量崩溃)</p>
 <p>它学习如何“信任”或“拒绝”历史数据。</p>
 </li>
 <li>
-<p>输出 (1): 粗略重建图 $O_d$</p>
+<p>输出 (1): 粗略重建图 <span class="arithmatex">\(O_d\)</span></p>
 </li>
 </ol>
-<p>这个网络并不只是输出一个Blend Mask。它会直接输出一个粗略的、已经完成了时间融合的图像 $O_d$。这个 $O_d$ 已经根据“History Rejection”的结果，混合了当前帧和可信的历史数据。</p>
+<p>这个网络并不只是输出一个Blend Mask。它会直接输出一个粗略的、已经完成了时间融合的图像 <span class="arithmatex">\(O_d\)</span>。这个 <span class="arithmatex">\(O_d\)</span> 已经根据“History Rejection”的结果，混合了当前帧和可信的历史数据。</p>
 <ol>
-<li>输出 (2): 隐藏状态 $H_d$</li>
+<li>输出 (2): 隐藏状态 <span class="arithmatex">\(H_d\)</span></li>
 </ol>
-<p>它还会输出它在计算过程中产生的高维特征图 $H_d$。这可以被理解为它对场景的“理解”（例如“这里是边缘”、“这里是遮挡”、“这里很稳定”）。</p>
+<p>它还会输出它在计算过程中产生的高维特征图 <span class="arithmatex">\(H_d\)</span>。这可以被理解为它对场景的“理解”（例如“这里是边缘”、“这里是遮挡”、“这里很稳定”）。</p>
 <h4 id="3-network-k-fp32">3. 阶段二：滤波网络 (Network K - FP32)<a class="headerlink" href="#3-network-k-fp32" title="Permanent link">&para;</a></h4>
 <p>这个网络<strong>接收阶段一的输出</strong>：</p>
 <ul>
 <li>
-<p>输入 1: 隐藏状态 $H_d$</p>
+<p>输入 1: 隐藏状态 <span class="arithmatex">\(H_d\)</span></p>
 </li>
 <li>
-<p>(可选) 输入 2: 粗略重建图 $O_d$</p>
+<p>(可选) 输入 2: 粗略重建图 <span class="arithmatex">\(O_d\)</span></p>
 </li>
 </ul>
-<p>它的工作是“细化” (Refine)。它看着 $H_d$（即 Network D 对场景的“理解”），然后为每个像素预测一个<strong>空间滤波器核</strong> $K_{x,y}$。</p>
+<p>它的工作是“细化” (Refine)。它看着 <span class="arithmatex">\(H_d\)</span>（即 Network D 对场景的“理解”），然后为每个像素预测一个<strong>空间滤波器核</strong> <span class="arithmatex">\(K_{x,y}\)</span>。</p>
 <ul>
 <li>
-<p>如果 $H_d$ 说：“这个区域在 $O_d$ 中是新暴露的遮挡区，我是猜出来的”，Network K 可能会预测一个<strong>空间锐化核</strong>来重建细节。</p>
+<p>如果 <span class="arithmatex">\(H_d\)</span> 说：“这个区域在 <span class="arithmatex">\(O_d\)</span> 中是新暴露的遮挡区，我是猜出来的”，Network K 可能会预测一个<strong>空间锐化核</strong>来重建细节。</p>
 </li>
 <li>
-<p>如果 $H_d$ 说：“这个区域在 $O_d$ 中非常稳定，只是有点锯齿”，Network K 可能会预测一个<strong>抗锯齿核</strong>（轻微模糊）。</p>
+<p>如果 <span class="arithmatex">\(H_d\)</span> 说：“这个区域在 <span class="arithmatex">\(O_d\)</span> 中非常稳定，只是有点锯齿”，Network K 可能会预测一个<strong>抗锯齿核</strong>（轻微模糊）。</p>
 </li>
 </ul>
 <h4 id="4-fp32">4. 阶段三：最终应用 (FP32)<a class="headerlink" href="#4-fp32" title="Permanent link">&para;</a></h4>
 <p>它的真正输入：</p>
-<p>$$
+<div class="arithmatex">\[
 O(x, y) = \sum_{i,j} K_{x,y}(i, j) \times \mathbf{O_d}(x+i, y+j)
-$$</p>
-<p>最终的输出 $O(x, y)$ 是通过将<strong>预测出的空间核 $K_{x,y}$</strong> 应用于<strong>已经包含历史信息的粗略重建图 $O_d$</strong> 上得到的。使用阶段二输出的滤波器，对$O_d$做卷积。</p>
+\]</div>
+<p>最终的输出 <span class="arithmatex">\(O(x, y)\)</span> 是通过将<strong>预测出的空间核 <span class="arithmatex">\(K_{x,y}\)</span></strong> 应用于<strong>已经包含历史信息的粗略重建图 <span class="arithmatex">\(O_d\)</span></strong> 上得到的。使用阶段二输出的滤波器，对<span class="arithmatex">\(O_d\)</span>做卷积。</p>
 
 
 
@@ -1032,6 +1032,12 @@ $$</p>
     
     
       <script src="../../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+        <script src="../../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
     
   </body>
