@@ -12,7 +12,7 @@
         <meta name="author" content="losuffi">
       
       
-        <link rel="canonical" href="https://losuffi.github.io/Blog/weeks/2025/week-43/article-1/">
+        <link rel="canonical" href="https://losuffi.github.io/Blog/weeks/2025/week-43/%E3%80%8AA%20Reduced-Precision%20Network%20for%20Image%20Reconstruction%E3%80%8B%20%28QW-Net%29%E9%98%85%E8%AF%BB/">
       
       
       
@@ -22,7 +22,7 @@
     
     
       
-        <title>文章标题 - Losuffi Blog</title>
+        <title>《A Reduced-Precision Network for Image Reconstruction》 (QW-Net) - Losuffi Blog</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#a-reduced-precision-network-for-image-reconstruction-qw-net" class="md-skip">
           跳转至
         </a>
       
@@ -108,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              文章标题
+              《A Reduced-Precision Network for Image Reconstruction》 (QW-Net)
             
           </span>
         </div>
@@ -239,38 +239,6 @@
   
   
   
-    
-    
-      
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../" class="md-tabs__link">
-          
-  
-  
-    
-  
-  周刊
-
-        </a>
-      </li>
-    
-  
-
-    
-  
-
-      
-        
-  
-  
-  
-  
     <li class="md-tabs__item">
       <a href="../../../../archive/" class="md-tabs__link">
         
@@ -377,121 +345,6 @@
   
   
   
-    
-    
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    周刊
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            周刊
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    2025年
-    
-  </span>
-  
-
-            </a>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_1">
-            <span class="md-nav__icon md-icon"></span>
-            2025年
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     <li class="md-nav__item">
       <a href="../../../../archive/" class="md-nav__link">
         
@@ -559,20 +412,170 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#1" class="md-nav__link">
     <span class="md-ellipsis">
-      简介
+      1. 核心概要
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#2" class="md-nav__link">
     <span class="md-ellipsis">
-      内容
+      2. 问题的根源：低精度与图像重建的矛盾
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-qw-net" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. QW-Net 的核心洞察与架构
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. QW-Net 的核心洞察与架构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-network-d-direct-prediction" class="md-nav__link">
+    <span class="md-ellipsis">
+      a. 特征提取网络 (Network D: Direct Prediction)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-network-k-kernel-prediction" class="md-nav__link">
+    <span class="md-ellipsis">
+      b. 滤波网络 (Network K: Kernel Prediction)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      架构图示
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 架构的数学表示
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. 结果与意义
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 结果与意义">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a" class="md-nav__link">
+    <span class="md-ellipsis">
+      a. 质量对比
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b" class="md-nav__link">
+    <span class="md-ellipsis">
+      b. 性能意义
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. 读者总结
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 读者总结">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#qw-net" class="md-nav__link">
+    <span class="md-ellipsis">
+      QW-Net 完整工作流程 (以时间超分为例)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="QW-Net 完整工作流程 (以时间超分为例)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 阶段零：数据准备 (Inputs)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-network-d-int4-" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 阶段一：特征提取 (Network D - INT4) - 【历史帧在这里被处理】
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-network-k-fp32" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 阶段二：滤波网络 (Network K - FP32)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-fp32" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 阶段三：最终应用 (FP32)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -595,17 +598,222 @@
   
 
 
-<h1 id="_1">文章标题<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<div class="admonition tip">
-<p class="admonition-title">发布日期</p>
-<p>2025-10-20</p>
-</div>
-<h2 id="_2">简介<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<p>在这里写文章内容...</p>
-<h2 id="_3">内容<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
-<p>...</p>
+<h1 id="a-reduced-precision-network-for-image-reconstruction-qw-net">《A Reduced-Precision Network for Image Reconstruction》 (QW-Net)<a class="headerlink" href="#a-reduced-precision-network-for-image-reconstruction-qw-net" title="Permanent link">&para;</a></h1>
+<p>作者: Thomas, T., et al.</p>
+<p>发布: ACM Transactions on Graphics (SIGGRAPH Asia 2020)</p>
+<p><a href="angusforbes.com/pdfs/Thomas_QWNet_TOG2020.pdf">论文PDF</a></p>
+<p><a href="creativecoding.soe.ucsc.edu/QW-Net/">项目主页 (含交互式对比)</a></p>
 <hr />
-<p><a href="../">← 返回第43周概览</a></p>
+<h2 id="1">1. 核心概要<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<p>本文提出了一种名为 <strong>QW-Net</strong> (Quantized-Weights Network) 的新型神经网络架构，旨在解决实时渲染中（如时间超分辨率）使用低精度网络进行图像重建的质量崩溃问题。</p>
+<p>其核心思想是：<strong>将重建任务解耦为两个专门化的网络</strong>。</p>
+<ol>
+<li>
+<p>一个<strong>计算密集型</strong>的<strong>特征提取网络</strong>，它对量化不敏感，因此被安全地<strong>量化为 4-bit 整数 (INT4)</strong>。</p>
+</li>
+<li>
+<p>一个<strong>计算轻量型</strong>的<strong>滤波网络</strong>，它对精度高度敏感，因此<strong>保持 32-bit 浮点 (FP32)</strong> 运行。</p>
+</li>
+</ol>
+<p>通过这种“白盒”式的架构设计，QW-Net 成功地将网络中<strong>近 95% 的计算</strong>用超高速的 INT4 完成，同时保证了重建质量与全精度 FP32 网络几乎一致，显著优于传统的 TAA（时间抗锯齿）。</p>
+<h2 id="2">2. 问题的根源：低精度与图像重建的矛盾<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<p>在实时渲染中，使用神经网络进行图像重建（如抗锯齿、超分辨率）是未来的趋势。为了在几毫秒内完成计算，利用低精度（如 INT8 或 INT4）来加速计算是必经之路。</p>
+<p><strong>矛盾点在于：</strong></p>
+<ul>
+<li>
+<p><strong>分类任务 (Classification)</strong>：如识别图像中的“猫”或“狗”。这类任务关心的是<strong>高级特征</strong>，对权重的微小扰动不敏感，因此非常<strong>耐受量化 (Resilient to Quantization)</strong>。</p>
+</li>
+<li>
+<p><strong>重建任务 (Reconstruction)</strong>：如超分辨率或 HDR 重建。这类任务关心的是<strong>高保真的像素值</strong>。对权重的微小扰动<strong>极其敏感</strong>，微小的量化误差都会导致最终颜色、亮度的巨大偏差，产生肉眼可见的色块、闪烁和伪影。</p>
+</li>
+</ul>
+<p>直接将一个标准的 "黑盒" U-Net 量化到 INT4 用于图像重建，会导致<strong>灾难性的质量下降</strong>。</p>
+<h2 id="3-qw-net">3. QW-Net 的核心洞察与架构<a class="headerlink" href="#3-qw-net" title="Permanent link">&para;</a></h2>
+<p>QW-Net 的设计理念是："让耐受的部分去跑低精度，让敏感的部分去跑高精度"。</p>
+<p>它将一个单一的 "黑盒" U-Net 拆分为两个U-Net的混合架构，分别对应任务的不同阶段：</p>
+<h3 id="a-network-d-direct-prediction">a. 特征提取网络 (Network D: Direct Prediction)<a class="headerlink" href="#a-network-d-direct-prediction" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>任务</strong>:</p>
+</li>
+<li>
+<p>接收所有输入（当前低分辨率帧、G-Buffer、运动矢量、历史帧）。</p>
+</li>
+<li>
+<p>利用运动矢量对历史帧进行时间扭曲 (Temporal Warping)。</p>
+</li>
+<li>
+<p>分析所有输入，提取出高维特征，如边缘、遮挡、混叠区域、运动方向等。</p>
+</li>
+<li>
+<p><strong>性质</strong>:</p>
+</li>
+<li>
+<p>这是一个“<strong>特征识别</strong>”任务，类似于分类，对精度不敏感。</p>
+</li>
+<li>
+<p>这是<strong>计算的主力</strong>，构成了整个管线约 95% 的计算量。</p>
+</li>
+<li>
+<p><strong>实现</strong>:</p>
+</li>
+<li>
+<p>使用一个 U-Net 架构。</p>
+</li>
+<li>
+<p>将该网络的所有权重<strong>量化为 4-bit 整数 (INT4)</strong> 来执行。</p>
+</li>
+</ul>
+<h3 id="b-network-k-kernel-prediction">b. 滤波网络 (Network K: Kernel Prediction)<a class="headerlink" href="#b-network-k-kernel-prediction" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>任务</strong>:</p>
+</li>
+<li>
+<p>接收特征提取网络 (D) 输出的高维特征图 (Feature Maps)。</p>
+</li>
+<li>
+<p><strong>不直接预测像素</strong>，而是利用这些特征来<strong>预测一组小型的重建滤波器（Kernels）</strong>。</p>
+</li>
+<li>
+<p>使用这些动态预测出的滤波器，对输入图像进行加权求和与滤波，重建出最终的高质量、高分辨率图像。</p>
+</li>
+<li>
+<p><strong>性质</strong>:</p>
+</li>
+<li>
+<p>这是一个“<strong>信号处理</strong>”和“颜色混合”任务，对滤波器权重的精度<strong>极其敏感</strong>。</p>
+</li>
+<li>
+<p>计算量非常小（例如，只使用 1x1 卷积核来预测其他核）。</p>
+</li>
+<li>
+<p><strong>实现</strong>:</p>
+</li>
+<li>
+<p>使用一个更浅的 U-Net 架构。</p>
+</li>
+<li>
+<p>该网络<strong>保持全精度 (FP32)</strong> 运行，以保证最终重建的保真度。</p>
+</li>
+</ul>
+<hr />
+<h3 id="_1">架构图示<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>QW-Net 的混合架构（结合了直接预测和核预测）可以用下图（源自论文项目页，改编自论文图7）来表示：</p>
+<p><em>(图片来源: <a href="https://creativecoding.soe.ucsc.edu/QW-Net/">UCSC QW-Net Project Page</a>)</em></p>
+<hr />
+<h2 id="4">4. 架构的数学表示<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
+<p>如果我们将一个标准的黑盒网络表示为 $I_{out} = \text{Net}(I_{in})$，那么量化它会导致：</p>
+<p>$$
+I_{out} = \text{Net}<em in="in">{\text{INT4}}(I</em>
+$$}) \quad \text{(导致质量崩溃)</p>
+<p>而 QW-Net 的架构可以被函数式地表示为：</p>
+<ol>
+<li>
+<p><strong>特征提取</strong>: $F = \text{Net}<em in="in">{D, \text{INT4}}(I</em>)$</p>
+</li>
+<li>
+<p><strong>核预测</strong>: $K = \text{Net}_{K, \text{FP32}}(F)$</p>
+</li>
+<li>
+<p><strong>最终重建</strong>: $I_{out} = K \ast \text{Upsample}(I_{low_res})$</p>
+</li>
+</ol>
+<p>其中 $I_{in}$ 是所有输入的集合（低分辨率帧、历史帧等），$F$ 是特征图，$K$ 是预测出的滤波器，$\ast$ 代表动态卷积/滤波操作。</p>
+<p>这个公式清晰地展示了计算负载最大的 $\text{Net}_{D}$ 是如何运行在 INT4 上的，而对质量起决定性作用的 $K$ 和最终的滤波操作 $\ast$ 是如何保持在高精度的。</p>
+<h2 id="5">5. 结果与意义<a class="headerlink" href="#5" title="Permanent link">&para;</a></h2>
+<h3 id="a">a. 质量对比<a class="headerlink" href="#a" title="Permanent link">&para;</a></h3>
+<p>QW-Net 成功地在 INT4 精度下达到了与 FP32 版本几乎无法区分的图像质量，并且远超传统的 TAA 和被量化的标准 U-Net。</p>
+<p><strong>[点击查看交互式对比图]</strong></p>
+<blockquote>
+<p>https://creativecoding.soe.ucsc.edu/QW-Net/</p>
+<p>(请访问项目主页，使用滑块对比 TAA, U-Net (INT4), QW-Net (FP32), 和 QW-Net (INT4) 之间的巨大差异)</p>
+</blockquote>
+<p><em>(图片来源: <a href="https://creativecoding.soe.ucsc.edu/QW-Net/">UCSC QW-Net Project Page</a>)</em></p>
+<h3 id="b">b. 性能意义<a class="headerlink" href="#b" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>巨大的性能提升</strong>: 通过将 95% 的计算量转移到 INT4，QW-Net 在现代 GPU (如 NVIDIA Turing / Ampere 架构) 上的运行速度相比其 FP32 版本有<strong>数倍的提升</strong>，使其完全满足实时渲染的严苛时间预算（例如 1-2ms）。</p>
+</li>
+<li>
+<p><strong>白盒设计的胜利</strong>: 本文证明了在 AI 图像重建领域，"黑盒" 堆叠层数的设计是低效且脆弱的。通过<strong>基于任务特性进行"白盒"分解</strong>，可以设计出更小、更快、更鲁棒的网络架构。</p>
+</li>
+<li>
+<p><strong>对游戏引擎的价值</strong>: QW-Net 提供的架构蓝图，对于开发新一代的时间超分辨率技术（如 UE5 的 TSR 或其他厂商的 AI 超分方案）具有极高的参考价值。它展示了如何在不牺牲质量的前提下，利用低精度硬件（如 Tensor Cores）的全部潜力。</p>
+</li>
+</ul>
+<h2 id="6">6. 读者总结<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
+<h3 id="qw-net">QW-Net 完整工作流程 (以时间超分为例)<a class="headerlink" href="#qw-net" title="Permanent link">&para;</a></h3>
+<p>这个管线是<strong>时域的 (Temporal)</strong>，它的设计目标就是为了<strong>取代和超越 TAA</strong>。</p>
+<h4 id="1-inputs">1. 阶段零：数据准备 (Inputs)<a class="headerlink" href="#1-inputs" title="Permanent link">&para;</a></h4>
+<p>在任何网络运行之前，你需要准备一个“输入数据包”，这个数据包通常包含：</p>
+<ul>
+<li>
+<p><strong>当前帧（低分辨率）</strong></p>
+</li>
+<li>
+<p><strong>历史帧（高分辨率）</strong> (也就是上一帧 QW-Net 的最终输出)</p>
+</li>
+<li>
+<p><strong>运动矢量 (Motion Vectors)</strong> (用于将历史帧对齐到当前帧)</p>
+</li>
+<li>
+<p><strong>G-Buffer</strong> (如深度、法线等，可选)</p>
+</li>
+</ul>
+<h4 id="2-network-d-int4-">2. 阶段一：特征提取 (Network D - INT4) - <strong>【历史帧在这里被处理】</strong><a class="headerlink" href="#2-network-d-int4-" title="Permanent link">&para;</a></h4>
+<p>这个网络是整个系统的“主力”。<strong>它接收 <em>所有</em> 的输入数据</strong>（当前帧、历史帧、运动矢量等）。</p>
+<p>它的工作是：</p>
+<ol>
+<li>
+<p><strong>时间扭曲 (Temporal Warping):</strong> 它首先使用运动矢量，将“历史帧”重投影（Warp）到当前帧的像素格上，得到一个“对齐后的历史帧”。</p>
+</li>
+<li>
+<p><strong>特征提取与融合:</strong> 接下来，这个INT4网络会<strong>同时</strong>查看“当前帧”和“对齐后的历史帧”，以及G-Buffer。</p>
+</li>
+<li>
+<p><strong>执行“History Rejection”:</strong> 在它的隐藏层中，它就在做“History Rejection”：</p>
+</li>
+<li>
+<p>它比较当前帧和历史帧，以识别遮挡、运动和不匹配。</p>
+</li>
+<li>
+<p>它学习如何“信任”或“拒绝”历史数据。</p>
+</li>
+<li>
+<p>输出 (1): 粗略重建图 $O_d$</p>
+</li>
+</ol>
+<p>这个网络并不只是输出一个Blend Mask。它会直接输出一个粗略的、已经完成了时间融合的图像 $O_d$。这个 $O_d$ 已经根据“History Rejection”的结果，混合了当前帧和可信的历史数据。</p>
+<ol>
+<li>输出 (2): 隐藏状态 $H_d$</li>
+</ol>
+<p>它还会输出它在计算过程中产生的高维特征图 $H_d$。这可以被理解为它对场景的“理解”（例如“这里是边缘”、“这里是遮挡”、“这里很稳定”）。</p>
+<h4 id="3-network-k-fp32">3. 阶段二：滤波网络 (Network K - FP32)<a class="headerlink" href="#3-network-k-fp32" title="Permanent link">&para;</a></h4>
+<p>这个网络<strong>接收阶段一的输出</strong>：</p>
+<ul>
+<li>
+<p>输入 1: 隐藏状态 $H_d$</p>
+</li>
+<li>
+<p>(可选) 输入 2: 粗略重建图 $O_d$</p>
+</li>
+</ul>
+<p>它的工作是“细化” (Refine)。它看着 $H_d$（即 Network D 对场景的“理解”），然后为每个像素预测一个<strong>空间滤波器核</strong> $K_{x,y}$。</p>
+<ul>
+<li>
+<p>如果 $H_d$ 说：“这个区域在 $O_d$ 中是新暴露的遮挡区，我是猜出来的”，Network K 可能会预测一个<strong>空间锐化核</strong>来重建细节。</p>
+</li>
+<li>
+<p>如果 $H_d$ 说：“这个区域在 $O_d$ 中非常稳定，只是有点锯齿”，Network K 可能会预测一个<strong>抗锯齿核</strong>（轻微模糊）。</p>
+</li>
+</ul>
+<h4 id="4-fp32">4. 阶段三：最终应用 (FP32)<a class="headerlink" href="#4-fp32" title="Permanent link">&para;</a></h4>
+<p>它的真正输入：</p>
+<p>$$
+O(x, y) = \sum_{i,j} K_{x,y}(i, j) \times \mathbf{O_d}(x+i, y+j)
+$$</p>
+<p>最终的输出 $O(x, y)$ 是通过将<strong>预测出的空间核 $K_{x,y}$</strong> 应用于<strong>已经包含历史信息的粗略重建图 $O_d$</strong> 上得到的。使用阶段二输出的滤波器，对$O_d$做卷积。</p>
 
 
 

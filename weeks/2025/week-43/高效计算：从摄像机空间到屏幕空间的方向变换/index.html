@@ -12,28 +12,24 @@
         <meta name="author" content="losuffi">
       
       
-        <link rel="canonical" href="https://losuffi.github.io/Blog/weeks/2025/week-43/">
+        <link rel="canonical" href="https://losuffi.github.io/Blog/weeks/2025/week-43/%E9%AB%98%E6%95%88%E8%AE%A1%E7%AE%97%EF%BC%9A%E4%BB%8E%E6%91%84%E5%83%8F%E6%9C%BA%E7%A9%BA%E9%97%B4%E5%88%B0%E5%B1%8F%E5%B9%95%E7%A9%BA%E9%97%B4%E7%9A%84%E6%96%B9%E5%90%91%E5%8F%98%E6%8D%A2/">
       
       
-        <link rel="prev" href="../../..">
       
       
-        <link rel="next" href="../../../archive/">
-      
-      
-      <link rel="icon" href="../../../assets/images/favicon.png">
+      <link rel="icon" href="../../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
     
     
       
-        <title>第43周 - Losuffi Blog</title>
+        <title>高效计算：从摄像机空间到屏幕空间的方向变换 - Losuffi Blog</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.84d31ad4.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.84d31ad4.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -52,7 +48,7 @@
       
     
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#202543" class="md-skip">
+        <a href="#_1" class="md-skip">
           跳转至
         </a>
       
@@ -92,7 +88,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="页眉">
-    <a href="../../.." title="Losuffi Blog" class="md-header__button md-logo" aria-label="Losuffi Blog" data-md-component="logo">
+    <a href="../../../.." title="Losuffi Blog" class="md-header__button md-logo" aria-label="Losuffi Blog" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -112,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              第43周
+              高效计算：从摄像机空间到屏幕空间的方向变换
             
           </span>
         </div>
@@ -225,7 +221,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../.." class="md-tabs__link">
+      <a href="../../../.." class="md-tabs__link">
         
   
   
@@ -242,45 +238,9 @@
   
   
   
-    
-  
-  
-    
-    
-      
-  
-  
-  
-    
-  
-  
-    
-    
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
-          
-  
-  
-    
-  
-  周刊
-
-        </a>
-      </li>
-    
-  
-
-    
-  
-
-      
-        
-  
-  
-  
   
     <li class="md-tabs__item">
-      <a href="../../../archive/" class="md-tabs__link">
+      <a href="../../../../archive/" class="md-tabs__link">
         
   
   
@@ -299,7 +259,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../about/" class="md-tabs__link">
+      <a href="../../../../about/" class="md-tabs__link">
         
   
   
@@ -334,7 +294,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="Losuffi Blog" class="md-nav__button md-logo" aria-label="Losuffi Blog" data-md-component="logo">
+    <a href="../../../.." title="Losuffi Blog" class="md-nav__button md-logo" aria-label="Losuffi Blog" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -364,7 +324,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../../../.." class="md-nav__link">
         
   
   
@@ -383,135 +343,10 @@
       
   
   
-    
-  
-  
-  
-    
-    
-      
-        
-      
-    
-    
-    
-      
-        
-        
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    周刊
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            周刊
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-    
-    
-    
-      
-      
-        
-          
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" checked>
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
-              
-  
-  
-  <span class="md-ellipsis">
-    2025年
-    
-  </span>
-  
-
-            </a>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_1">
-            <span class="md-nav__icon md-icon"></span>
-            2025年
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
   
   
     <li class="md-nav__item">
-      <a href="../../../archive/" class="md-nav__link">
+      <a href="../../../../archive/" class="md-nav__link">
         
   
   
@@ -533,7 +368,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../about/" class="md-nav__link">
+      <a href="../../../../about/" class="md-nav__link">
         
   
   
@@ -577,28 +412,55 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
-      本周概览
+      摘要
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#1" class="md-nav__link">
     <span class="md-ellipsis">
-      文章列表
+      1. “天真”的（低效）方法
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="文章列表">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 高效的（数学推导）方法
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 高效的（数学推导）方法">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#21" class="md-nav__link">
     <span class="md-ellipsis">
-      文章标题1
+      2.1 简化的投影公式
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 定义问题并求导
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 最终的优化公式
     </span>
   </a>
   
@@ -610,9 +472,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#3" class="md-nav__link">
     <span class="md-ellipsis">
-      导航
+      3. 结论
     </span>
   </a>
   
@@ -637,23 +499,142 @@
   
 
 
-<h1 id="202543">2025年第43周<a class="headerlink" href="#202543" title="Permanent link">&para;</a></h1>
-<div class="admonition info">
-<p class="admonition-title">时间范围</p>
-<p>2025-10-20 至 2025-10-26</p>
-</div>
-<h2 id="_1">本周概览<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<p>本周主要分享了以下内容...（请补充）</p>
-<h2 id="_2">文章列表<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<h3 id="1"><a href="article-1/">文章标题1</a><a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
-<p>文章简介...</p>
-<p><strong>关键词</strong>: 标签1, 标签2</p>
+<h1 id="_1">高效计算：从摄像机空间到屏幕空间的方向变换<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p><strong>原文出处</strong>:(<a href="https://www.forwardscattering.org/post/64">Forward Scattering - The Weblog of Nicholas Chapman</a>) <strong>核心思想</strong>: 通过微积分求导，将一个成本高昂的几何问题（计算屏幕空间方向）转变为一个仅需8次浮点运算的超高效算法。</p>
 <hr />
-<h2 id="_3">导航<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h4 id="_2">摘要<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h4>
+<p>在计算机图形学中，我们经常需要知道一个3D空间中的方向（如运动矢量）在2D屏幕上是如何表现的。本文推导并实现了一种高性能算法，用于计算一个3D摄像机空间中的<strong>方向向量</strong>在2D屏幕空间中的<strong>瞬时方向</strong>。</p>
+<p>其核心思想是：放弃“暴力”的“点减法”方法，转而<strong>通过微积分（对变换方程求导）来直接计算方向</strong>，从而将着色器中的操作数量从约60次（32次乘法、24次加法、4次除法）<strong>锐减到仅 8 次</strong>（6次乘法、2次减法）。</p>
+<h2 id="1">1. “天真”的（低效）方法<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<p>一个直观的、但性能低下的方法是：</p>
+<ol>
+<li>
+<p>在3D摄像机空间中，在射线上取两个点：起点 $p$ 和一个沿方向 $d$ 延伸一点的点 $p + d$。</p>
+</li>
+<li>
+<p>将这两个点<strong>分别</strong>通过完整的投影矩阵变换和透视除法，投影到2D屏幕空间，得到 $screen_p1$ 和 $screen_p2$。</p>
+</li>
+<li>
+<p>通过 $screen_p2 - screen_p1$ 来获得2D屏幕空间的方向。</p>
+</li>
+</ol>
+<p>High-level shader language</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>// 一个完整的摄像机空间到屏幕空间的点变换
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>// (包含了昂贵的矩阵乘法和透视除法)
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>vec2 camToScreenSpace(vec4 p_cs) {
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    vec4 v = projection_matrix * p_cs;
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    return v.xy / v.w; // 透视除法
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>}
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>// “天真”的方向变换方法
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>// 返回一个未标准化的向量
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>vec2 camSpaceDirToScreenSpaceDir_Naive(vec4 p_cs, vec4 dir_cs) {
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    vec4 p2_cs = p_cs + dir_cs;
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    vec2 screen_p1 = camToScreenSpace(p_cs);
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    vec2 screen_p2 = camToScreenSpace(p2_cs);
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    return screen_p2 - screen_p1;
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>}
+</span></code></pre></div>
+<p>这个方法虽然可行，但<strong>极其昂贵</strong>。它需要执行 <strong>2次</strong> 完整的矩阵向量乘法和 <strong>2次</strong> 透视除法。这在着色器中是一个巨大的性能浪费。</p>
+<h2 id="2">2. 高效的（数学推导）方法<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<p>优化的核心原理是：<strong>将“几何问题”转变为“微积分问题”</strong>。</p>
+<p>我们要求的“屏幕空间方向”本质上是一个“速度”概念，即：当我的3D点 $p$ 沿着 $d$ 方向移动时，它在2D屏幕上的<strong>瞬时变化率（速度）</strong>是多少？</p>
+<p>在数学上，“速度”就是“位置”对“时间”的<strong>导数（Derivative）</strong>。</p>
+<h3 id="21">2.1 简化的投影公式<a class="headerlink" href="#21" title="Permanent link">&para;</a></h3>
+<p>首先，我们放弃完整的 $projection_matrix \times p$ 矩阵乘法，转而使用更直接的薄透镜（thin-lens）透视投影方程：</p>
+<p>$$
+pss_x = (\frac{p_x}{-p_z}) \times l_over_w + 0.5
+$$</p>
+<p>$$
+pss_y = (\frac{p_y}{-p_z}) \times l_over_h + 0.5
+$$</p>
+<p>（其中 $p$ 是摄像机空间的点， $l_over_w$ 和 $l_over_h$ 是由摄像机焦距和传感器宽高决定的常量。）</p>
+<h3 id="22">2.2 定义问题并求导<a class="headerlink" href="#22" title="Permanent link">&para;</a></h3>
+<p>我们将3D射线定义为一个关于参数 $t$ 的函数： $r(t) = p + t \times d$</p>
 <ul>
-<li><a href="../week-42/index.md">← 上一周</a></li>
-<li><a href="../week-44/index.md">下一周 →</a></li>
+<li>
+<p>$p_x(t) = p_x + t \times d_x$</p>
+</li>
+<li>
+<p>$p_z(t) = p_z + t \times d_z$</p>
+</li>
 </ul>
+<p>将它代入 $pss_x(t)$ 的方程（为简化，暂时忽略常量 $l_over_w$ 和 $0.5$）：</p>
+<p>$$
+pss_x(t) = \frac{p_x + t \times d_x}{-(p_z + t \times d_z)}
+$$</p>
+<p>我们要求的就是 $pss_x(t)$ 在 $t=0$ 时刻的导数 $\frac{d(pss_x)}{dt}$。</p>
+<p>这是一个 $f(t) / g(t)$ 的形式，我们可以应用微积分中的除法定则 (Quotient Rule)：</p>
+<p>$$
+(\frac{f}{g})' = \frac{f'g - fg'}{g^2}
+$$</p>
+<ul>
+<li>
+<p>$f(t) = p_x + t \times d_x$</p>
+</li>
+<li>
+<p>$g(t) = -(p_z + t \times d_z)$</p>
+</li>
+<li>
+<p>$f'(t) = d_x$</p>
+</li>
+<li>
+<p>$g'(t) = -d_z$</p>
+</li>
+</ul>
+<p>应用除法定则：</p>
+<p>$$
+\frac{d(pss_x)}{dt} = \frac{(d_x) \times -(p_z + t \times d_z) - (p_x + t \times d_x) \times -(d_z)}{(-(p_z + t \times d_z))^2}
+$$</p>
+<p>现在，我们在 $t=0$ 时（即在射线起点 $p$ 处）求值：</p>
+<p>$$
+\left. \frac{d(pss_x)}{dt} \right|_{t=0} = \frac{(d_x \times -p_z) - (p_x \times -d_z)}{(-p_z)^2}
+$$</p>
+<p>$$
+= \frac{-d_x p_z + p_x d_z}{p_z^2}
+$$</p>
+<p>$$
+= \frac{p_x d_z - d_x p_z}{p_z^2}
+$$</p>
+<h3 id="23">2.3 最终的优化公式<a class="headerlink" href="#23" title="Permanent link">&para;</a></h3>
+<p>把我们之前忽略的常量 $l_over_w$ 加回来，屏幕空间X方向的速度为：</p>
+<p>$$
+ScreenDir_x = l_over_w \times \frac{p_x d_z - p_z d_x}{p_z^2}
+$$</p>
+<p>$ScreenDir_y$ 同理可得：</p>
+<p>$$
+ScreenDir_y = l_over_h \times \frac{p_y d_z - p_z d_y}{p_z^2}
+$$</p>
+<p>此时我们发现一个关键点： $1 / (p_z^2)$ 这一项对于 $X$ 和 $Y$ 两个分量是<strong>完全相同的</strong>。它是一个<strong>标量（Scalar）</strong>，只会<strong>缩放</strong>这个2D方向向量的<strong>长度</strong>，但<strong>不会改变它的方向</strong>。</p>
+<p>既然我们的目标只是一个<strong>未标准化的（unnormalised）方向，那么这个既昂贵（需要一次乘法和一次除法）又对方向没影响的公共标量 $1 / p_z^2$ 就可以被安全地省略掉</strong>！</p>
+<p>这就得到了我们最终的、超高效的算法：</p>
+<p>High-level shader language</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/**
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a> * 高效计算摄像机空间到屏幕空间的方向变换
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a> * @param p 摄像机空间中的点 (p.z 应为负值)
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a> * @param d 摄像机空间中的方向向量
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a> * @param l_over_w 投影常量 (例如 ProjectionMatrix[0][0])
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a> * @param l_over_h 投影常量 (例如 ProjectionMatrix[1][1])
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a> * @return vec2 屏幕空间中的未标准化方向
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a> */
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>vec2 fastCamSpaceDirToScreenSpaceDir(vec4 p, vec4 d, float l_over_w, float l_over_h) 
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>{
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    // l_over_w 和 l_over_h 通常可以直接从投影矩阵中获取
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    // 假设是标准透视投影矩阵:
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    // l_over_w = Proj[0][0]
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    // l_over_h = Proj[1][1]
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    return vec2(
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        (p.x * d.z - p.z * d.x) * l_over_w,
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>        (p.y * d.z - p.z * d.y) * l_over_h
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    );
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>}
+</span></code></pre></div>
+<h2 id="3">3. 结论<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<p>通过深入理解变换背后的数学原理（从几何问题转向微积分求导问题），我们将一个需要约60次浮点运算的复杂操作，优化为了一个仅包含<strong>6次乘法和2次减法</strong>的超高效公式。</p>
+<p>这对于需要大量计算屏幕空间导数（例如用于运动模糊、LOD选择或某些后期处理效果）的场景，具有极高的性能价值。</p>
 
 
 
@@ -721,10 +702,10 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.tracking", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.tracking", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
       
     
   </body>
