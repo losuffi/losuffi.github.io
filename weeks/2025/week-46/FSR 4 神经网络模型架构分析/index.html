@@ -1,0 +1,2518 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="每周技术文档分享">
+      
+      
+        <meta name="author" content="losuffi">
+      
+      
+        <link rel="canonical" href="https://losuffi.github.io/weeks/2025/week-46/FSR%204%20%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90/">
+      
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>FSR 4 神经网络模型架构分析 - Losuffi Blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fsr-4" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../../.." title="Losuffi Blog" class="md-header__button md-logo" aria-label="Losuffi Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Losuffi Blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              FSR 4 神经网络模型架构分析
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到亮色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到亮色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/losuffi/losuffi.github.io" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    losuffi/losuffi.github.io
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  周刊
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../archive/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  归档
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  关于
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Losuffi Blog" class="md-nav__button md-logo" aria-label="Losuffi Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Losuffi Blog
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/losuffi/losuffi.github.io" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    losuffi/losuffi.github.io
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    首页
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    周刊
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            周刊
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    2025年
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            2025年
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../week-45/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第45周
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../week-44/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第44周
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../week-43/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第43周
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    归档
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    关于
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      概述
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      基础信息
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      网络架构总览
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="网络架构总览">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      架构拓扑
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      详细模型结构
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="详细模型结构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-encoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 编码器阶段 (Encoder)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 编码器阶段 (Encoder)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-encoder1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 Encoder1
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-encoder2" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 Encoder2
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-encoder3" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3 Encoder3
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-bottleneck" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 瓶颈层 (Bottleneck)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-decoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 解码器阶段 (Decoder)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 解码器阶段 (Decoder)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-decoder3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 Decoder3
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-decoder2" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 Decoder2
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 输出层
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pass" class="md-nav__link">
+    <span class="md-ellipsis">
+      推理Pass分解
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="推理Pass分解">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pass_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pass执行流程
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      输入输出通道分析
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="输入输出通道分析">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-fsr4" class="md-nav__link">
+    <span class="md-ellipsis">
+      输入 - FSR4循环神经网络的时间输入结构
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="输入 - FSR4循环神经网络的时间输入结构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#7-pre_wmmahlsl185-202" class="md-nav__link">
+    <span class="md-ellipsis">
+      神经网络7通道输入构成 (基于pre_wmma.hlsl:185-202分析)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre_wmmahlsl158-202" class="md-nav__link">
+    <span class="md-ellipsis">
+      历史帧和循环状态处理流程 (pre_wmma.hlsl:158-202)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      循环状态的生命周期
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-fsr48" class="md-nav__link">
+    <span class="md-ellipsis">
+      输出 - FSR4神经网络的8通道自适应滤波参数输出
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="输出 - FSR4神经网络的8通道自适应滤波参数输出">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#8-nhwc-384021608" class="md-nav__link">
+    <span class="md-ellipsis">
+      8通道输出结构 (NHWC格式: 3840×2160×8)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post_wmmahlsl9-55" class="md-nav__link">
+    <span class="md-ellipsis">
+      智能滤波工作原理 (post_wmma.hlsl:9-55)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      技术特性
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="技术特性">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 量化技术
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 硬件优化
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 内存布局
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 残差连接设计
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据流和纹理绑定
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="数据流和纹理绑定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      运行时输入绑定
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      神经网络输入打包
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      输出解包和后处理
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fsr4" class="md-nav__link">
+    <span class="md-ellipsis">
+      FSR4 整体工作流程
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FSR4 整体工作流程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      渲染管线集成概览
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      完整工作流程详解
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="完整工作流程详解">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-pre-fsr4" class="md-nav__link">
+    <span class="md-ellipsis">
+      阶段1: 渲染管线准备 (Pre-FSR4)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-fsr4-pre-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      阶段2: FSR4预处理 (Pre-Processing)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-14-pass-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      阶段3: 神经网络推理 (14-Pass Inference)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-fsr4-post-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      阶段4: FSR4后处理 (Post-Processing)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      从神经网络输出到最终图像的完整流程
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="从神经网络输出到最终图像的完整流程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据变换过程
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      关键技术原理
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="关键技术原理">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      阶段5: 质量控制和优化
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frame-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      与Frame Generation的协同工作
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      实时性能特性
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      模型复杂度分析
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="模型复杂度分析">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      参数统计
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      设计亮点
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fsr" class="md-nav__link">
+    <span class="md-ellipsis">
+      与传统FSR的区别
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fsr4shading-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      FSR4对透明物体和Shading Change的处理机制
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FSR4对透明物体和Shading Change的处理机制">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      透明物体和运动矢量缺失的处理
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="透明物体和运动矢量缺失的处理">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-reactive-mask" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 反应式遮罩（Reactive Mask）系统
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-disocclusion-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Disocclusion Detection（遮挡检测）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-motion-vector-dilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 运动矢量稀释（Motion Vector Dilation）
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shading-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shading Change的检测和处理
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Shading Change的检测和处理">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 色度距离检测
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 循环状态的时间记忆
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 动态时间权重调整
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      处理无运动矢量透明物体的完整流程
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="处理无运动矢量透明物体的完整流程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      阶段1: 渲染时标记
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-fsr4" class="md-nav__link">
+    <span class="md-ellipsis">
+      阶段2: FSR4预处理
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      阶段3: 神经网络推理
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      阶段4: 智能后处理
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      关键技术创新
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 循环神经网络架构
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 智能自适应滤波
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 硬件优化设计
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 编码器-解码器拓扑
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. 实时性能
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="fsr-4">FSR 4 神经网络模型架构分析<a class="headerlink" href="#fsr-4" title="Permanent link">&para;</a></h1>
+<h2 id="_1">概述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>FSR 4（FidelityFX Super Resolution 4）是 AMD 基于深度学习的图像超分辨率技术。本文档基于对 <code>fsr4_model_v07_i8_quality/passes_2160.hlsl</code> 的逆向工程分析，揭示了其神经网络架构。</p>
+<h2 id="_2">基础信息<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>模型版本</strong>: fsr4_model_v07_i8 (Version 0.7)</li>
+<li><strong>量化精度</strong>: Int8 量化</li>
+<li><strong>目标分辨率</strong>: 2160p (4K输出)</li>
+<li><strong>质量预设</strong>: Quality（1.5x上采样比例）</li>
+<li><strong>目标硬件</strong>: AMD Navi48+ (RDNA 3+)</li>
+<li><strong>暂存内存</strong>: 79.1MB</li>
+<li><strong>编译目标</strong>: Compute Shader 6.6</li>
+</ul>
+<h2 id="_3">网络架构总览<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>FSR 4 采用经典的编码器-解码器（Encoder-Decoder）架构，具有跳跃连接（Skip Connections）和残差连接（Residual Connections）。整个网络包含 <strong>14个推理 Pass</strong>，从 Pass 0 到 Pass 13。</p>
+<h3 id="_4">架构拓扑<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>输入 (3840×2160×7) → Encoder1 → Encoder2 → Encoder3 → Bottleneck → Decoder3 → Decoder2 → 输出 (3840×2160×8)
+</span></code></pre></div>
+<h2 id="_5">详细模型结构<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h3 id="1-encoder">1. 编码器阶段 (Encoder)<a class="headerlink" href="#1-encoder" title="Permanent link">&para;</a></h3>
+<h4 id="11-encoder1">1.1 Encoder1<a class="headerlink" href="#11-encoder1" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>下采样卷积层</strong>: <code>DownscaleStridedConv2x2</code></li>
+<li><strong>输入</strong>: <code>(7, 2160, 3840)</code> - 7通道输入特征</li>
+<li><strong>卷积核</strong>: <code>(16, 7, 2, 2)</code> - 16个输出通道，2×2卷积核，步长2</li>
+<li><strong>输出</strong>: <code>(16, 1080, 1920)</code> - 分辨率减半</li>
+<li><strong>权重规模</strong>: 256 dwords，偏置 8 dwords</li>
+</ul>
+<h4 id="12-encoder2">1.2 Encoder2<a class="headerlink" href="#12-encoder2" title="Permanent link">&para;</a></h4>
+<p>包含 <strong>2个残差块</strong> + <strong>1个下采样层</strong>：</p>
+<p><strong>残差块结构</strong> (ResidualBlock × 2):</p>
+<ul>
+<li><strong>深度可分离卷积</strong> (Depthwise Separable Convolution)</li>
+<li><code>conv_dw</code>: 576 dwords 权重</li>
+<li><code>conv_pw_expand</code>: 128 dwords 权重 (1×1卷积扩展通道)</li>
+<li><code>conv_pw_contract</code>: 128 dwords 权重 (1×1卷积收缩通道)</li>
+<li><strong>下采样层</strong>: <code>DownscaleStridedConv2x2</code></li>
+<li><strong>权重规模</strong>: 512 dwords</li>
+<li><strong>输出通道</strong>: 16通道</li>
+</ul>
+<h4 id="13-encoder3">1.3 Encoder3<a class="headerlink" href="#13-encoder3" title="Permanent link">&para;</a></h4>
+<p>包含 <strong>2个残差块</strong> + <strong>1个下采样层</strong>：</p>
+<p><strong>残差块结构</strong> (ResidualBlock × 2):</p>
+<ul>
+<li><strong>空间混合卷积</strong> (<code>spatial_mixing_partial_conv</code>): 576 dwords</li>
+<li><strong>逐点扩展</strong> (<code>pw_expand</code>): 512 dwords → 32通道输出</li>
+<li><strong>逐点收缩</strong> (<code>pw_contract</code>): 512 dwords → 16通道输出</li>
+<li><strong>下采样层</strong>: 输出32通道</li>
+</ul>
+<h3 id="2-bottleneck">2. 瓶颈层 (Bottleneck)<a class="headerlink" href="#2-bottleneck" title="Permanent link">&para;</a></h3>
+<p>包含 <strong>3个残差块</strong> + <strong>1个上采样层</strong>：</p>
+<p><strong>残差块结构</strong> (ResidualBlock × 3):</p>
+<ul>
+<li><strong>空间混合卷积</strong>: 处理深层特征</li>
+<li><strong>逐点扩展</strong>: 扩展至64通道</li>
+<li><strong>逐点收缩</strong>: 收缩至32通道</li>
+<li><strong>上采样层</strong>: <code>UpscaleConvTranspose2x2</code></li>
+</ul>
+<h3 id="3-decoder">3. 解码器阶段 (Decoder)<a class="headerlink" href="#3-decoder" title="Permanent link">&para;</a></h3>
+<h4 id="31-decoder3">3.1 Decoder3<a class="headerlink" href="#31-decoder3" title="Permanent link">&para;</a></h4>
+<p>包含 <strong>2个残差块</strong> + <strong>1个上采样层</strong>：</p>
+<p><strong>残差块结构</strong>:</p>
+<ul>
+<li><strong>空间混合</strong>: 576 dwords 权重</li>
+<li><strong>逐点扩展</strong>: 512 dwords → 32通道</li>
+<li><strong>逐点收缩</strong>: 512 dwords → 16通道</li>
+<li><strong>上采样层</strong>: 转置卷积 512 dwords → 8通道输出</li>
+</ul>
+<h4 id="32-decoder2">3.2 Decoder2<a class="headerlink" href="#32-decoder2" title="Permanent link">&para;</a></h4>
+<p>包含 <strong>2个残差块</strong> + <strong>1个上采样层</strong>：</p>
+<p><strong>残差块结构</strong>:</p>
+<ul>
+<li><strong>深度可分离卷积</strong>: 传统的DW+PW结构</li>
+<li><strong>逐点扩展</strong>: 128 dwords → 32通道</li>
+<li><strong>逐点收缩</strong>: 128 dwords → 16通道</li>
+<li><strong>最终上采样</strong>: 128 dwords → <strong>8通道输出</strong></li>
+</ul>
+<h3 id="4">4. 输出层<a class="headerlink" href="#4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>最终输出</strong>: <code>(8, 2160, 3840)</code> - 8通道，4K分辨率</li>
+<li><strong>数据类型</strong>: 量化的半精度浮点</li>
+</ul>
+<h2 id="pass">推理Pass分解<a class="headerlink" href="#pass" title="Permanent link">&para;</a></h2>
+<h3 id="pass_1">Pass执行流程<a class="headerlink" href="#pass_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Pass</th>
+<th>主要操作</th>
+<th>输入分辨率</th>
+<th>输出分辨率</th>
+<th>通道变化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pass 0</td>
+<td>Encoder1下采样</td>
+<td>3840×2160×7</td>
+<td>1920×1080×16</td>
+<td>7→16</td>
+</tr>
+<tr>
+<td>Pass 1</td>
+<td>Encoder2残差块1</td>
+<td>1920×1080×16</td>
+<td>1920×1080×16</td>
+<td>16→16</td>
+</tr>
+<tr>
+<td>Pass 2</td>
+<td>Encoder2残差块2+下采样</td>
+<td>1920×1080×16</td>
+<td>960×540×16</td>
+<td>16→16</td>
+</tr>
+<tr>
+<td>Pass 3</td>
+<td>Encoder3残差块1</td>
+<td>960×540×16</td>
+<td>960×540×16</td>
+<td>16→16</td>
+</tr>
+<tr>
+<td>Pass 4</td>
+<td>Encoder3残差块2+下采样</td>
+<td>960×540×16</td>
+<td>480×270×32</td>
+<td>16→32</td>
+</tr>
+<tr>
+<td>Pass 5</td>
+<td>Bottleneck残差块1</td>
+<td>480×270×32</td>
+<td>480×270×32</td>
+<td>32→32</td>
+</tr>
+<tr>
+<td>Pass 6</td>
+<td>Bottleneck残差块2</td>
+<td>480×270×32</td>
+<td>480×270×32</td>
+<td>32→32</td>
+</tr>
+<tr>
+<td>Pass 7</td>
+<td>Bottleneck残差块3</td>
+<td>480×270×32</td>
+<td>480×270×32</td>
+<td>32→32</td>
+</tr>
+<tr>
+<td>Pass 8</td>
+<td>Bottleneck上采样</td>
+<td>480×270×32</td>
+<td>960×540×16</td>
+<td>32→16</td>
+</tr>
+<tr>
+<td>Pass 9</td>
+<td>Decoder3残差块1</td>
+<td>960×540×16</td>
+<td>960×540×16</td>
+<td>16→16</td>
+</tr>
+<tr>
+<td>Pass 10</td>
+<td>Decoder3残差块2+上采样</td>
+<td>960×540×16</td>
+<td>1920×1080×8</td>
+<td>16→8</td>
+</tr>
+<tr>
+<td>Pass 11</td>
+<td>Decoder2残差块1</td>
+<td>1920×1080×8</td>
+<td>1920×1080×8</td>
+<td>8→8</td>
+</tr>
+<tr>
+<td>Pass 12</td>
+<td>Decoder2残差块2</td>
+<td>1920×1080×8</td>
+<td>1920×1080×8</td>
+<td>8→8</td>
+</tr>
+<tr>
+<td>Pass 13</td>
+<td>Decoder2最终上采样</td>
+<td>1920×1080×8</td>
+<td>3840×2160×8</td>
+<td>8→8</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_6">输入输出通道分析<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<h3 id="-fsr4">输入 - FSR4循环神经网络的时间输入结构<a class="headerlink" href="#-fsr4" title="Permanent link">&para;</a></h3>
+<p><strong>关键发现</strong>: FSR4采用<strong>循环神经网络（RNN）架构</strong>，同时处理当前帧、历史帧和循环状态，实现时间一致性的超分辨率重建。</p>
+<h4 id="7-pre_wmmahlsl185-202">神经网络7通道输入构成 (基于pre_wmma.hlsl:185-202分析)<a class="headerlink" href="#7-pre_wmmahlsl185-202" title="Permanent link">&para;</a></h4>
+<p>FSR4神经网络接收的真实输入不仅包含当前帧信息，还融合了时间维度的历史信息：</p>
+<table>
+<thead>
+<tr>
+<th>通道索引</th>
+<th>内容</th>
+<th>格式</th>
+<th>来源</th>
+<th>计算方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>通道 0</strong></td>
+<td><strong>当前帧亮度</strong></td>
+<td>F16</td>
+<td>当前帧RGB→YCbCr转换</td>
+<td><code>input_ycbcr.x</code></td>
+</tr>
+<tr>
+<td><strong>通道 1</strong></td>
+<td><strong>历史帧亮度</strong></td>
+<td>F16</td>
+<td>历史帧重投影→YCbCr转换</td>
+<td><code>history_ycbcr.x</code></td>
+</tr>
+<tr>
+<td><strong>通道 2</strong></td>
+<td><strong>色度距离</strong></td>
+<td>F16</td>
+<td>当前帧vs历史帧色度差</td>
+<td><code>sqrt(pow(Cb_diff,2) + pow(Cr_diff,2))</code></td>
+</tr>
+<tr>
+<td><strong>通道 3</strong></td>
+<td><strong>循环状态 R</strong></td>
+<td>F16</td>
+<td>上一帧神经网络输出</td>
+<td><code>recurrent[0]</code></td>
+</tr>
+<tr>
+<td><strong>通道 4</strong></td>
+<td><strong>循环状态 G</strong></td>
+<td>F16</td>
+<td>上一帧神经网络输出</td>
+<td><code>recurrent[1]</code></td>
+</tr>
+<tr>
+<td><strong>通道 5</strong></td>
+<td><strong>循环状态 B</strong></td>
+<td>F16</td>
+<td>上一帧神经网络输出</td>
+<td><code>recurrent[2]</code></td>
+</tr>
+<tr>
+<td><strong>通道 6</strong></td>
+<td><strong>循环状态 A</strong></td>
+<td>F16</td>
+<td>上一帧神经网络输出</td>
+<td><code>recurrent[3]</code></td>
+</tr>
+<tr>
+<td><strong>通道 7</strong></td>
+<td><strong>保留通道</strong></td>
+<td>F16</td>
+<td>填充为0</td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>循环神经网络特性</strong>：</p>
+<ul>
+<li><strong>时间记忆</strong>：循环状态（通道3-6）保存了上一帧的特征，类似LSTM的隐藏状态</li>
+<li><strong>运动补偿</strong>：历史帧通过运动矢量进行空间对齐，确保时间一致性</li>
+<li><strong>多模态输入</strong>：同时处理亮度、色度差异和循环状态，实现全面的时间建模</li>
+</ul>
+<h4 id="pre_wmmahlsl158-202">历史帧和循环状态处理流程 (pre_wmma.hlsl:158-202)<a class="headerlink" href="#pre_wmmahlsl158-202" title="Permanent link">&para;</a></h4>
+<div class="language-hlsl highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// 1. 运动矢量重投影 - 时间对齐</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">const</span><span class="w"> </span><span class="kt">float2</span><span class="w"> </span><span class="n">history_xy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">float2</span><span class="p">(</span><span class="n">dtid</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">velocity</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dstSize</span><span class="p">;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">const</span><span class="w"> </span><span class="kt">float2</span><span class="w"> </span><span class="n">history_uv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">history_xy</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">0.5f</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">tex_size</span><span class="p">;</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1">// 2. Catmull-Rom高质量历史帧采样</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">onscreen</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="n">SampleTextureCatmullRom</span><span class="p">(</span><span class="n">history_uv</span><span class="p">,</span><span class="w"> </span><span class="n">tex_size</span><span class="p">,</span><span class="w"> </span><span class="n">history</span><span class="p">);</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="n">recurrent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_recurrent_0</span><span class="p">.</span><span class="n">SampleLevel</span><span class="p">(</span><span class="n">g_history_sampler</span><span class="p">,</span><span class="w"> </span><span class="n">history_uv</span><span class="p">,</span><span class="w"> </span><span class="mo">0</span><span class="p">);</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">}</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1">// 3. 时间混合和去燥处理</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">history</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temporal_sample_weight</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">upscale_input</span><span class="p">.</span><span class="n">rgb</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">temporal_sample_weight</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">history</span><span class="p">;</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1">// 4. 多通道输入构建</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1">// 亮度通道：当前帧和历史帧的Y分量</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="kt">float3</span><span class="w"> </span><span class="n">input_ycbcr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RGBtoYCbCr</span><span class="p">(</span><span class="n">upscale_input</span><span class="p">.</span><span class="n">xyz</span><span class="p">);</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="kt">float3</span><span class="w"> </span><span class="n">history_ycbcr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RGBtoYCbCr</span><span class="p">(</span><span class="n">history</span><span class="p">);</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1">// 色度差异：捕捉时间变化</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">color_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">sqrt</span><span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="n">input_ycbcr</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">history_ycbcr</span><span class="p">.</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">                                 </span><span class="nb">pow</span><span class="p">(</span><span class="n">input_ycbcr</span><span class="p">.</span><span class="n">z</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">history_ycbcr</span><span class="p">.</span><span class="n">z</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span><span class="p">);</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1">// 循环状态：来自上一帧的网络输出</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="n">downscaleInputs</span><span class="p">[</span><span class="mo">0</span><span class="p">].</span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MODEL_RFM_NORMALIZE</span><span class="p">(</span><span class="n">NETWORK_DATA_TYPE</span><span class="p">(</span><span class="n">recurrent</span><span class="p">[</span><span class="mo">0</span><span class="p">]));</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="n">downscaleInputs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MODEL_RFM_NORMALIZE</span><span class="p">(</span><span class="n">NETWORK_DATA_TYPE</span><span class="p">(</span><span class="n">recurrent</span><span class="p">[</span><span class="mi">1</span><span class="p">]));</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="n">downscaleInputs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MODEL_RFM_NORMALIZE</span><span class="p">(</span><span class="n">NETWORK_DATA_TYPE</span><span class="p">(</span><span class="n">recurrent</span><span class="p">[</span><span class="mi">2</span><span class="p">]));</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="n">downscaleInputs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MODEL_RFM_NORMALIZE</span><span class="p">(</span><span class="n">NETWORK_DATA_TYPE</span><span class="p">(</span><span class="n">recurrent</span><span class="p">[</span><span class="mi">3</span><span class="p">]));</span>
+</span></code></pre></div>
+<h4 id="_7">循环状态的生命周期<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Frame N-1: 神经网络输出 → rw_recurrent_0/1 (写入)
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>           ↓
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Frame N:   r_recurrent_0/1 (读取) → 神经网络输入通道3-6
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>           ↓
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Frame N:   神经网络处理 → 新的循环状态输出
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>           ↓
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>Frame N:   rw_recurrent_0/1 (写入) → 用于Frame N+1
+</span></code></pre></div>
+<p><strong>循环神经网络架构优势</strong>:</p>
+<ol>
+<li><strong>时间一致性</strong>: 循环状态保持跨帧的特征连续性，减少时间闪烁</li>
+<li><strong>运动感知</strong>: 结合运动矢量和历史信息，处理复杂运动场景</li>
+<li><strong>细节保持</strong>: 通过时间累积保持和增强高频细节信息</li>
+<li><strong>自适应处理</strong>: 根据场景变化动态调整时间混合策略</li>
+</ol>
+<h3 id="-fsr48">输出 - FSR4神经网络的8通道自适应滤波参数输出<a class="headerlink" href="#-fsr48" title="Permanent link">&para;</a></h3>
+<p><strong>关键发现</strong>: FSR4神经网络的输出<strong>不是直接的RGB颜色</strong>，而是<strong>智能滤波器的参数</strong>，用于后续的自适应图像重建。</p>
+<h4 id="8-nhwc-384021608">8通道输出结构 (NHWC格式: 3840×2160×8)<a class="headerlink" href="#8-nhwc-384021608" title="Permanent link">&para;</a></h4>
+<p>基于<code>post_wmma.hlsl</code>和相关后处理分析：</p>
+<table>
+<thead>
+<tr>
+<th>通道索引</th>
+<th>参数名称</th>
+<th>格式</th>
+<th>功能描述</th>
+<th>后处理用法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>通道 0</strong></td>
+<td><strong>滤波器参数α</strong></td>
+<td>R16_FLOAT</td>
+<td>自适应高斯滤波的相关性因子</td>
+<td><code>correlation_factor = tanh(ch0)</code></td>
+</tr>
+<tr>
+<td><strong>通道 1</strong></td>
+<td><strong>X轴缩放因子</strong></td>
+<td>R16_FLOAT</td>
+<td>控制滤波核在X方向的形状</td>
+<td><code>scale_factor_x = 2.0/(1.0+exp(-ch1))</code></td>
+</tr>
+<tr>
+<td><strong>通道 2</strong></td>
+<td><strong>Y轴缩放因子</strong></td>
+<td>R16_FLOAT</td>
+<td>控制滤波核在Y方向的形状</td>
+<td><code>scale_factor_y = 2.0/(1.0+exp(-ch2))</code></td>
+</tr>
+<tr>
+<td><strong>通道 3</strong></td>
+<td><strong>时间混合权重</strong></td>
+<td>R16_FLOAT</td>
+<td>当前帧与重投影历史帧的混合比例</td>
+<td><code>blending_factor = 1.0/(1.0+exp(-ch3))</code></td>
+</tr>
+<tr>
+<td><strong>通道 4</strong></td>
+<td><strong>循环状态R</strong></td>
+<td>R16_FLOAT</td>
+<td>传递给下一帧的记忆状态</td>
+<td>直接存储至<code>rw_recurrent_0.r</code></td>
+</tr>
+<tr>
+<td><strong>通道 5</strong></td>
+<td><strong>循环状态G</strong></td>
+<td>R16_FLOAT</td>
+<td>传递给下一帧的记忆状态</td>
+<td>直接存储至<code>rw_recurrent_0.g</code></td>
+</tr>
+<tr>
+<td><strong>通道 6</strong></td>
+<td><strong>循环状态B</strong></td>
+<td>R16_FLOAT</td>
+<td>传递给下一帧的记忆状态</td>
+<td>直接存储至<code>rw_recurrent_0.b</code></td>
+</tr>
+<tr>
+<td><strong>通道 7</strong></td>
+<td><strong>循环状态A</strong></td>
+<td>R16_FLOAT</td>
+<td>传递给下一帧的记忆状态</td>
+<td>直接存储至<code>rw_recurrent_0.a</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="post_wmmahlsl9-55">智能滤波工作原理 (post_wmma.hlsl:9-55)<a class="headerlink" href="#post_wmmahlsl9-55" title="Permanent link">&para;</a></h4>
+<p>FSR4的核心创新在于使用神经网络为每个像素预测最优的滤波器参数：</p>
+<div class="language-hlsl highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kt">float3</span><span class="w"> </span><span class="n">apply_model_filter</span><span class="p">(</span><span class="kt">uint</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">float4</span><span class="w"> </span><span class="n">filter</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">exposureValue</span><span class="p">)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p">{</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="c1">// 1. 提取神经网络预测的滤波参数</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">correlation_factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">tanh</span><span class="p">(</span><span class="n">filter</span><span class="p">[</span><span class="mo">0</span><span class="p">]);</span><span class="w">  </span><span class="c1">// 相关性因子</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">scale_factor_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">exp</span><span class="p">(</span><span class="o">-</span><span class="n">filter</span><span class="p">[</span><span class="mi">1</span><span class="p">]));</span><span class="w">  </span><span class="c1">// X轴缩放</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">scale_factor_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">exp</span><span class="p">(</span><span class="o">-</span><span class="n">filter</span><span class="p">[</span><span class="mi">2</span><span class="p">]));</span><span class="w">  </span><span class="c1">// Y轴缩放</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="c1">// 2. 构建自适应高斯滤波核</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">gauss_weight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">exp</span><span class="p">((</span><span class="o">-</span><span class="mf">0.5</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mf">0.47</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.47</span><span class="p">))</span><span class="w"> </span><span class="o">*</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">        </span><span class="p">(</span><span class="n">x_dist2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">scale_factor_x2</span><span class="w"> </span><span class="o">+</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">         </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">correlation_factor</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">x_dist</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y_dist</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">scale_factor_xy</span><span class="w"> </span><span class="o">+</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">         </span><span class="n">y_dist2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">scale_factor_y2</span><span class="p">));</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="c1">// 3. 应用智能滤波</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="n">upscaled_color</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">ApplyMuLaw</span><span class="p">(</span><span class="n">LoadInputColor</span><span class="p">(</span><span class="kt">uint2</span><span class="p">(</span><span class="n">x_in</span><span class="p">,</span><span class="w"> </span><span class="n">y_in</span><span class="p">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">exposureValue</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">gauss_weight</span><span class="p">;</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="c1">// 4. 时间混合</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">blending_factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">exp</span><span class="p">(</span><span class="o">-</span><span class="n">filter</span><span class="p">[</span><span class="mi">3</span><span class="p">]));</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">    </span><span class="kt">float3</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">upscaled_color</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">blending_factor</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">                 </span><span class="n">r_reprojected_color</span><span class="p">[</span><span class="kt">uint2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">)]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">blending_factor</span><span class="p">;</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>智能滤波的技术优势</strong>:</p>
+<ol>
+<li><strong>像素级自适应</strong>: 每个像素使用不同的滤波参数，精确处理各种内容类型</li>
+<li><strong>各向异性滤波</strong>: 通过X/Y缩放因子实现方向性感知的滤波</li>
+<li><strong>相关性控制</strong>: correlation_factor参数处理对角线方向的特征</li>
+<li><strong>时间智能混合</strong>: 基于内容自适应调整当前帧与历史帧的权重</li>
+<li><strong>内容感知</strong>: 神经网络根据局部特征预测最优滤波策略</li>
+</ol>
+<p><strong>输出处理流程</strong>:</p>
+<ol>
+<li><strong>颜色通道 (0-2)</strong>: 直接作为最终渲染结果</li>
+<li><strong>置信度通道 (3)</strong>: 用于判断上采样质量，低置信度区域可能需要额外处理</li>
+<li><strong>运动矢量 (4-5)</strong>: 为下一帧提供更精确的运动信息</li>
+<li><strong>累积权重 (6)</strong>: 控制时间抗锯齿的强度</li>
+<li><strong>细节增强 (7)</strong>: 应用自适应锐化，恢复高频细节</li>
+</ol>
+<h2 id="_8">技术特性<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<h3 id="1">1. 量化技术<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Int8量化</strong>: 所有权重使用8位整数量化</li>
+<li><strong>量化缩放因子</strong>: 每层都有独立的量化缩放因子（如 <code>0.014884727075695992</code>）</li>
+<li><strong>FP8支持</strong>: 针对特定GPU的FP8优化版本</li>
+</ul>
+<h3 id="2">2. 硬件优化<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>WMMA指令</strong>: 使用AMD Wave Matrix Multiply Accumulate指令加速</li>
+<li><strong>DOT4指令</strong>: 支持4元素点积指令</li>
+<li><strong>Shader Model 6.6</strong>: 需要最新的DirectX 12 Ultimate支持</li>
+</ul>
+<h3 id="3">3. 内存布局<a class="headerlink" href="#3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>NHWC格式</strong>: 使用 Batch-Height-Width-Channel 内存布局</li>
+<li><strong>线程组织</strong>: 8×8×1 或 32×1×1 线程组配置</li>
+<li><strong>暂存缓冲区</strong>: 79.1MB用于中间结果存储</li>
+</ul>
+<h3 id="4_1">4. 残差连接设计<a class="headerlink" href="#4_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>深度可分离卷积</strong>: 在编码器和部分解码器中使用</li>
+<li><strong>空间混合卷积</strong>: 在编码器后期和解码器中使用，可能包含注意力机制</li>
+<li><strong>逐点卷积</strong>: 用于通道维度的信息融合</li>
+</ul>
+<h2 id="_9">数据流和纹理绑定<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
+<h3 id="_10">运行时输入绑定<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// fsrapirendermodule.cpp 1376-1398</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">dispatchUpscale</span><span class="p">.</span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_pTempTexture</span><span class="p">;</span><span class="w">              </span><span class="c1">// 渲染颜色 (RGB)</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">dispatchUpscale</span><span class="p">.</span><span class="n">depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_pDepthTarget</span><span class="p">;</span><span class="w">              </span><span class="c1">// 深度缓冲 (R32F)</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">dispatchUpscale</span><span class="p">.</span><span class="n">motionVectors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_pMotionVectors</span><span class="p">;</span><span class="w">    </span><span class="c1">// 运动矢量 (RG16F)</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">dispatchUpscale</span><span class="p">.</span><span class="n">reactive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_pReactiveMask</span><span class="p">;</span><span class="w">          </span><span class="c1">// 响应遮罩 (R8)</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">dispatchUpscale</span><span class="p">.</span><span class="n">transparencyAndComposition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_pCompositionMask</span><span class="p">;</span><span class="w"> </span><span class="c1">// 合成遮罩 (R8)</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">dispatchUpscale</span><span class="p">.</span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_pColorTarget</span><span class="p">;</span><span class="w">             </span><span class="c1">// 输出缓冲 (RGBA16F)</span>
+</span></code></pre></div>
+<h3 id="_11">神经网络输入打包<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>在预处理阶段，多个纹理被打包成7通道张量：</p>
+<ul>
+<li><strong>纹理采样</strong>: 使用双线性或Catmull-Rom重采样</li>
+<li><strong>格式转换</strong>: 从纹理格式转换为半精度浮点</li>
+<li><strong>归一化</strong>: 深度和运动矢量进行适当的缩放</li>
+<li><strong>遮罩融合</strong>: 将Reactive和Composition遮罩合并到第7通道</li>
+</ul>
+<h3 id="_12">输出解包和后处理<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<p>神经网络的8通道输出被分解为：</p>
+<ul>
+<li><strong>HDR颜色</strong>: 应用色调映射前的线性颜色空间</li>
+<li><strong>时间信息</strong>: 用于下一帧的时间累积</li>
+<li><strong>质量控制</strong>: 基于置信度进行自适应处理</li>
+<li><strong>锐化控制</strong>: 应用RCAS (Robust Contrast Adaptive Sharpening)</li>
+</ul>
+<h2 id="fsr4">FSR4 整体工作流程<a class="headerlink" href="#fsr4" title="Permanent link">&para;</a></h2>
+<h3 id="_13">渲染管线集成概览<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>graph TD
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    A[渲染管线开始] --&gt; B[几何渲染]
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    B --&gt; C[G-Buffer生成]
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    C --&gt; D[光照计算]
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    D --&gt; E[半透明渲染]
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    E --&gt; F[粒子系统]
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    F --&gt; G[FSR4预处理]
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    G --&gt; H[神经网络推理]
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    H --&gt; I[FSR4后处理]
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    I --&gt; J[色调映射]
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    J --&gt; K[最终输出]
+</span></code></pre></div>
+<h3 id="_14">完整工作流程详解<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h4 id="1-pre-fsr4">阶段1: 渲染管线准备 (Pre-FSR4)<a class="headerlink" href="#1-pre-fsr4" title="Permanent link">&para;</a></h4>
+<p><strong>1.1 几何和光照渲染</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>RasterShadowRenderModule → GBufferRenderModule → LightingRenderModule
+</span></code></pre></div>
+<ul>
+<li><strong>阴影渲染</strong>: 生成shadowmap用于光照计算</li>
+<li><strong>G-Buffer</strong>: 生成法线、材质、运动矢量等信息</li>
+<li><strong>光照计算</strong>: PBR材质计算，生成HDR颜色</li>
+</ul>
+<p><strong>1.2 特殊效果渲染</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>SkyDomeRenderModule → TranslucencyRenderModule → GPUParticleRenderModule
+</span></code></pre></div>
+<ul>
+<li><strong>天空盒</strong>: 环境光照和背景</li>
+<li><strong>半透明</strong>: 玻璃、水面等半透明材质</li>
+<li><strong>粒子系统</strong>: 烟雾、火花等特效，同时生成Reactive Mask</li>
+</ul>
+<p><strong>1.3 遮罩生成</strong></p>
+<ul>
+<li><strong>Reactive Mask</strong>: 标记粒子、特效区域 (R8格式)</li>
+<li><strong>Composition Mask</strong>: 标记UI元素、半透明合成区域 (R8格式)</li>
+</ul>
+<h4 id="2-fsr4-pre-processing">阶段2: FSR4预处理 (Pre-Processing)<a class="headerlink" href="#2-fsr4-pre-processing" title="Permanent link">&para;</a></h4>
+<p><strong>2.1 输入验证和状态管理</strong></p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// fsrapirendermodule.cpp:1406</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">dispatchUpscale</span><span class="p">.</span><span class="n">reset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_ResetUpscale</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">GetScene</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetCurrentCamera</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">WasCameraReset</span><span class="p">();</span>
+</span></code></pre></div>
+<ul>
+<li><strong>重置检测</strong>: 检查相机是否发生突然变化</li>
+<li><strong>资源状态</strong>: 确保所有输入纹理处于正确状态</li>
+<li><strong>Jitter计算</strong>: 计算子像素偏移用于时间抗锯齿</li>
+</ul>
+<p><strong>2.2 输入纹理预处理</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Color Texture (HDR) + Depth Buffer + Motion Vectors + Masks → 7-Channel Tensor
+</span></code></pre></div>
+<ul>
+<li><strong>格式转换</strong>: 各种纹理格式→半精度浮点</li>
+<li><strong>归一化处理</strong>:</li>
+<li>颜色: 线性空间HDR → 网络输入范围</li>
+<li>深度: Z-Buffer值 → 归一化深度</li>
+<li>运动矢量: 像素空间 → 归一化坐标</li>
+<li>遮罩: R8 → 浮点权重</li>
+</ul>
+<p><strong>2.3 Catmull-Rom重采样</strong> (pre.hlsl)</p>
+<ul>
+<li><strong>高质量下采样</strong>: 从显示分辨率到渲染分辨率</li>
+<li><strong>抗锯齿</strong>: 减少下采样引入的锯齿</li>
+<li><strong>特征保持</strong>: 保持细节信息用于神经网络处理</li>
+</ul>
+<h4 id="3-14-pass-inference">阶段3: 神经网络推理 (14-Pass Inference)<a class="headerlink" href="#3-14-pass-inference" title="Permanent link">&para;</a></h4>
+<p><strong>3.1 编码阶段 (Pass 0-4)</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Input(3840×2160×7) → Encoder1 → Encoder2 → Encoder3 → Feature(480×270×32)
+</span></code></pre></div>
+<p><strong>Pass 0: 初始下采样</strong></p>
+<ul>
+<li><strong>下采样卷积</strong>: 2×2步长，7→16通道</li>
+<li><strong>分辨率</strong>: 3840×2160×7 → 1920×1080×16</li>
+<li><strong>作用</strong>: 初步特征提取和分辨率缩减</li>
+</ul>
+<p><strong>Pass 1-2: Encoder2处理</strong></p>
+<ul>
+<li><strong>残差块1</strong>: 深度可分离卷积，通道保持16</li>
+<li><strong>残差块2+下采样</strong>: 1920×1080×16 → 960×540×16</li>
+<li><strong>作用</strong>: 中层特征学习和空间降维</li>
+</ul>
+<p><strong>Pass 3-4: Encoder3处理</strong></p>
+<ul>
+<li><strong>残差块1</strong>: 空间混合卷积，16通道</li>
+<li><strong>残差块2+下采样</strong>: 960×540×16 → 480×270×32</li>
+<li><strong>作用</strong>: 高级语义特征提取</li>
+</ul>
+<p><strong>3.2 瓶颈阶段 (Pass 5-8)</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Bottleneck: 3×ResidualBlock + Upscale → Feature Enhancement
+</span></code></pre></div>
+<p><strong>Pass 5-7: 深层特征处理</strong></p>
+<ul>
+<li><strong>残差块×3</strong>: 480×270×32，深层特征学习</li>
+<li><strong>通道扩展</strong>: 16→32→64→32通道的扩张-收缩</li>
+<li><strong>作用</strong>: 最深层的语义理解和特征增强</li>
+</ul>
+<p><strong>Pass 8: 开始上采样</strong></p>
+<ul>
+<li><strong>转置卷积</strong>: 480×270×32 → 960×540×16</li>
+<li><strong>作用</strong>: 开始重建高分辨率特征</li>
+</ul>
+<p><strong>3.3 解码阶段 (Pass 9-13)</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Decoder3 → Decoder2 → Output(3840×2160×8)
+</span></code></pre></div>
+<p><strong>Pass 9-10: Decoder3重建</strong></p>
+<ul>
+<li><strong>残差块1</strong>: 空间混合，960×540×16</li>
+<li><strong>残差块2+上采样</strong>: 960×540×16 → 1920×1080×8</li>
+<li><strong>作用</strong>: 中等分辨率特征重建</li>
+</ul>
+<p><strong>Pass 11-12: Decoder2精细化</strong></p>
+<ul>
+<li><strong>残差块×2</strong>: 1920×1080×8，精细特征重建</li>
+<li><strong>深度可分离卷积</strong>: 高效的细节恢复</li>
+<li><strong>作用</strong>: 高分辨率细节恢复</li>
+</ul>
+<p><strong>Pass 13: 最终上采样</strong></p>
+<ul>
+<li><strong>转置卷积</strong>: 1920×1080×8 → 3840×2160×8</li>
+<li><strong>融合处理</strong>: 结合skip连接的多尺度特征</li>
+<li><strong>作用</strong>: 生成最终的8通道输出</li>
+</ul>
+<h4 id="4-fsr4-post-processing">阶段4: FSR4后处理 (Post-Processing)<a class="headerlink" href="#4-fsr4-post-processing" title="Permanent link">&para;</a></h4>
+<p><strong>4.1 神经网络输出解析</strong> 神经网络Pass 13的8通道输出需要特殊的后处理来生成最终图像：</p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">// 从post.hlsl第437-438行的融合操作</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">FusedConv2D_DW_Conv2D_PW_Relu_Conv2D_Add_ConvTranspose2D</span><span class="p">(</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="mf">16.584852442729886</span><span class="p">,</span><span class="w"> </span><span class="mf">0.06029598414897919</span><span class="p">,</span><span class="w"> </span><span class="mf">22.7801944733756</span><span class="p">,</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="mf">0.043897781521081924</span><span class="p">,</span><span class="w"> </span><span class="mf">0.06884194910526276</span><span class="p">,</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="c1">// 输入: (16, 1080, 1920) → 输出: (8, 2160, 3840)</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span><span class="p">...</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="p">);</span>
+</span></code></pre></div>
+<p><strong>神经网络8通道输出分解</strong>:</p>
+<ul>
+<li><strong>通道0-2</strong>: 基础上采样颜色 (Base upscaled color)</li>
+<li><strong>通道3</strong>: 滤波器相关参数 (correlation_factor)</li>
+<li><strong>通道4-5</strong>: X/Y轴缩放因子 (scale_factor_x/y)</li>
+<li><strong>通道6</strong>: 混合因子 (blending_factor)</li>
+<li><strong>通道7</strong>: 其他滤波参数</li>
+</ul>
+<p><strong>4.2 自适应滤波处理</strong> (post_wmma.hlsl:9-55)
+FSR4使用神经网络输出的参数进行自适应高斯滤波：</p>
+<div class="language-hlsl highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kt">float3</span><span class="w"> </span><span class="n">apply_model_filter</span><span class="p">(</span><span class="kt">uint</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">float4</span><span class="w"> </span><span class="n">filter</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">exposureValue</span><span class="p">)</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="p">{</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="c1">// 1. 提取神经网络预测的滤波参数</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">correlation_factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="nb">exp</span><span class="p">(</span><span class="n">filter</span><span class="p">[</span><span class="mo">0</span><span class="p">])</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">exp</span><span class="p">(</span><span class="o">-</span><span class="n">filter</span><span class="p">[</span><span class="mo">0</span><span class="p">]))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="nb">exp</span><span class="p">(</span><span class="n">filter</span><span class="p">[</span><span class="mo">0</span><span class="p">])</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">exp</span><span class="p">(</span><span class="o">-</span><span class="n">filter</span><span class="p">[</span><span class="mo">0</span><span class="p">])));</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">scale_factor_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">exp</span><span class="p">(</span><span class="o">-</span><span class="n">filter</span><span class="p">[</span><span class="mi">1</span><span class="p">]));</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">scale_factor_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">exp</span><span class="p">(</span><span class="o">-</span><span class="n">filter</span><span class="p">[</span><span class="mi">2</span><span class="p">]));</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">    </span><span class="c1">// 2. 计算自适应高斯核</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">gauss_weight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">exp</span><span class="p">((</span><span class="o">-</span><span class="mf">0.5</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mf">0.47</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.47</span><span class="p">))</span><span class="w"> </span><span class="o">*</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">        </span><span class="p">(</span><span class="n">x_dist2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">scale_factor_x2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">correlation_factor</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">x_dist</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y_dist</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">scale_factor_xy</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y_dist2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">scale_factor_y2</span><span class="p">));</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">    </span><span class="c1">// 3. 应用滤波并累积</span>
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">    </span><span class="n">upscaled_color</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">ApplyMuLaw</span><span class="p">(</span><span class="n">LoadInputColor</span><span class="p">(</span><span class="kt">uint2</span><span class="p">(</span><span class="n">x_in</span><span class="p">,</span><span class="w"> </span><span class="n">y_in</span><span class="p">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">exposureValue</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">gauss_weight</span><span class="p">;</span>
+</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">    </span><span class="c1">// 4. 与重投影颜色混合</span>
+</span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">blending_factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">exp</span><span class="p">(</span><span class="o">-</span><span class="n">filter</span><span class="p">[</span><span class="mi">3</span><span class="p">])));</span>
+</span><span id="__span-14-17"><a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="w">    </span><span class="kt">float3</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">upscaled_color</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">blending_factor</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">r_reprojected_color</span><span class="p">[</span><span class="kt">uint2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">)]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">blending_factor</span><span class="p">;</span>
+</span><span id="__span-14-18"><a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>
+</span><span id="__span-14-19"><a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
+</span><span id="__span-14-20"><a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>关键创新</strong>:</p>
+<ul>
+<li><strong>自适应核</strong>: 每个像素使用不同的高斯滤波核</li>
+<li><strong>智能混合</strong>: 基于神经网络预测的置信度进行时间混合</li>
+<li><strong>高频保持</strong>: 滤波参数保护重要的细节信息</li>
+</ul>
+<p><strong>4.3 资源管理和数据流</strong> (ffx_fsr4_upscale_resources.h)</p>
+<div class="language-hlsl highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1">// 神经网络输出存储</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="kt">StructuredBuffer</span><span class="o">&lt;</span><span class="n">NETWORK_DATA_TYPE</span><span class="o">&gt;</span><span class="w"> </span><span class="n">r_network_output_rfm</span><span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="k">register</span><span class="p">(</span><span class="n">t10</span><span class="p">);</span><span class="w"> </span><span class="c1">// RFM输出</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="kt">StructuredBuffer</span><span class="o">&lt;</span><span class="n">NETWORK_DATA_TYPE</span><span class="o">&gt;</span><span class="w"> </span><span class="n">r_network_output_other</span><span class="w">  </span><span class="o">:</span><span class="w"> </span><span class="k">register</span><span class="p">(</span><span class="n">t11</span><span class="p">);</span><span class="w"> </span><span class="c1">// 其他输出</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1">// 后处理缓冲区</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="kt">RWTexture2D</span><span class="o">&lt;</span><span class="n">DATA_TYPE3</span><span class="o">&gt;</span><span class="w">   </span><span class="n">rw_output_color_for_rcas</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">register</span><span class="p">(</span><span class="n">u10</span><span class="p">);</span><span class="w"> </span><span class="c1">// RCAS输入</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="kt">RWTexture2D</span><span class="o">&lt;</span><span class="kt">float3</span><span class="o">&gt;</span><span class="w">       </span><span class="n">rw_rcas_output</span><span class="w">           </span><span class="o">:</span><span class="w"> </span><span class="k">register</span><span class="p">(</span><span class="n">u11</span><span class="p">);</span><span class="w"> </span><span class="c1">// 最终输出</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="kt">RWTexture2D</span><span class="o">&lt;</span><span class="kt">float3</span><span class="o">&gt;</span><span class="w">       </span><span class="n">rw_mlsr_output_color</span><span class="w">     </span><span class="o">:</span><span class="w"> </span><span class="k">register</span><span class="p">(</span><span class="n">u2</span><span class="p">);</span><span class="w">  </span><span class="c1">// 游戏最终输出</span>
+</span></code></pre></div>
+<p><strong>4.4 时间累积和稳定性</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Current Frame + Historical Frames + Neural Weights → Temporal Result
+</span></code></pre></div>
+<ul>
+<li><strong>运动补偿</strong>: 使用精细化运动矢量对齐历史帧</li>
+<li><strong>权重分配</strong>: 神经网络预测的时间混合权重</li>
+<li><strong>一致性检查</strong>: 检测和处理时间不一致性</li>
+<li><strong>鬼影抑制</strong>: 自动检测并减少temporal ghosting</li>
+</ul>
+<p><strong>4.5 自适应锐化 (RCAS)</strong> (rcas.hlsl)
+最终的RCAS锐化处理：</p>
+<div class="language-hlsl highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kt">void</span><span class="w"> </span><span class="n">CurrFilter</span><span class="p">(</span><span class="n">FFX_MIN16_U2</span><span class="w"> </span><span class="n">pos</span><span class="p">)</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="p">{</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">    </span><span class="n">FfxFloat32x3</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">    </span><span class="n">FsrRcasF</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">g</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">pos</span><span class="p">,</span><span class="w"> </span><span class="n">rcasConfig</span><span class="p">);</span><span class="w"> </span><span class="c1">// 应用RCAS锐化</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">    </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RemoveMuLaw</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">rgb</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">LoadExposureValue</span><span class="p">();</span><span class="w"> </span><span class="c1">// 去除μ-law编码和曝光校正</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">    </span><span class="n">rw_rcas_output</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FfxFloat32x4</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">rgb</span><span class="p">,</span><span class="w"> </span><span class="mf">1.f</span><span class="p">);</span><span class="w"> </span><span class="c1">// 输出最终RGB</span>
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>RCAS特性</strong>:</p>
+<ul>
+<li><strong>对比度自适应</strong>: 根据局部对比度调整锐化强度</li>
+<li><strong>边缘保护</strong>: 避免过度锐化导致的振铃效应</li>
+<li><strong>高效实现</strong>: 使用64×1×1线程组优化内存访问</li>
+</ul>
+<h2 id="_15">从神经网络输出到最终图像的完整流程<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h2>
+<h3 id="_16">数据变换过程<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>graph TD
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    A[神经网络8通道输出3840×2160×8] --&gt; B[通道分离]
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    B --&gt; C[滤波参数提取Channels 3-7]
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    B --&gt; D[基础颜色提取Channels 0-2]
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    C --&gt; E[自适应高斯滤波]
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    D --&gt; E
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>    E --&gt; F[时间累积混合]
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>    F --&gt; G[μ-law去编码]
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>    G --&gt; H[曝光校正]
+</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>    H --&gt; I[RCAS锐化]
+</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>    I --&gt; J[最终RGB输出3840×2160×3]
+</span></code></pre></div>
+<h3 id="_17">关键技术原理<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<p><strong>1. 智能滤波</strong>:</p>
+<ul>
+<li>神经网络为每个像素预测最优的滤波参数</li>
+<li>自适应调整滤波核的形状和强度</li>
+<li>保护重要的高频细节信息</li>
+</ul>
+<p><strong>2. 时间一致性</strong>:</p>
+<ul>
+<li>基于神经网络预测的混合权重</li>
+<li>智能的历史帧对齐和融合</li>
+<li>自动检测和处理时间不稳定性</li>
+</ul>
+<p><strong>3. 感知优化</strong>:</p>
+<ul>
+<li>μ-law编码保护视觉重要区域</li>
+<li>HDR/曝光感知处理</li>
+<li>对比度自适应锐化</li>
+</ul>
+<p><strong>4. 硬件优化</strong>:</p>
+<ul>
+<li>AMD WMMA指令加速矩阵运算</li>
+<li>内存coalescing优化</li>
+<li>64×1×1线程组高效执行</li>
+</ul>
+<p>这种设计使FSR4能够：</p>
+<ul>
+<li><strong>智能上采样</strong>: 每个像素使用最优处理策略</li>
+<li><strong>时间稳定</strong>: 减少闪烁和temporal artifacts</li>
+<li><strong>细节保护</strong>: 恢复和增强高频信息</li>
+<li><strong>实时性能</strong>: 在现代GPU上达到实时帧率</li>
+</ul>
+<h4 id="5">阶段5: 质量控制和优化<a class="headerlink" href="#5" title="Permanent link">&para;</a></h4>
+<p><strong>5.1 置信度驱动的质量控制</strong></p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">confidence</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">threshold</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">    </span><span class="n">apply_fallback_processing</span><span class="p">();</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<ul>
+<li><strong>低置信度检测</strong>: 识别网络输出质量较低的区域</li>
+<li><strong>回退处理</strong>: 对低置信度区域应用传统方法</li>
+<li><strong>混合权重</strong>: 动态调整神经网络和传统方法的权重</li>
+</ul>
+<p><strong>5.2 响应式处理</strong></p>
+<ul>
+<li><strong>粒子区域</strong>: 基于Reactive Mask的特殊处理</li>
+<li><strong>UI区域</strong>: 基于Composition Mask的锐度保持</li>
+<li><strong>动态调整</strong>: 根据场景内容调整处理策略</li>
+</ul>
+<p><strong>5.3 性能优化策略</strong></p>
+<ul>
+<li><strong>Async Compute</strong>: 与图形管线并行执行</li>
+<li><strong>Memory Coalescing</strong>: 优化内存访问模式</li>
+<li><strong>Wavefront Optimization</strong>: 针对AMD GPU的波前优化</li>
+</ul>
+<h3 id="frame-generation">与Frame Generation的协同工作<a class="headerlink" href="#frame-generation" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>FSR4 Upscaling → Frame Generation → Display
+</span></code></pre></div>
+<p><strong>帧生成集成</strong>:</p>
+<ol>
+<li><strong>运动矢量传递</strong>: FSR4精细化的运动矢量用于帧生成</li>
+<li><strong>时序一致性</strong>: 确保上采样和帧生成的时间一致性</li>
+<li><strong>质量平衡</strong>: 在上采样质量和帧生成效果间取得平衡</li>
+</ol>
+<h3 id="_18">实时性能特性<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<p><strong>延迟控制</strong>:</p>
+<ul>
+<li><strong>单帧处理</strong>: 每帧独立处理，无多帧依赖</li>
+<li><strong>管线化</strong>: 14个Pass可以管线化执行</li>
+<li><strong>内存优化</strong>: 79.1MB暂存内存高效复用</li>
+</ul>
+<p><strong>质量vs性能平衡</strong>:</p>
+<ul>
+<li><strong>质量预设</strong>: Quality/Balanced/Performance/Ultra Performance</li>
+<li><strong>动态调整</strong>: 基于GPU负载动态调整质量</li>
+<li><strong>帧率目标</strong>: 优先保证帧率稳定性</li>
+</ul>
+<h2 id="_19">模型复杂度分析<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h2>
+<h3 id="_20">参数统计<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<p>基于权重数组大小的粗略估算：</p>
+<ul>
+<li><strong>总权重参数</strong>: 约 50,000+ 参数</li>
+<li><strong>内存占用</strong>: ~79.1MB 暂存 + ~200KB 权重</li>
+<li><strong>计算复杂度</strong>: 约 100+ GFLOPS（针对4K推理）</li>
+</ul>
+<h3 id="_21">设计亮点<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>多尺度特征融合</strong>: 编码器-解码器架构支持多尺度特征学习</li>
+<li><strong>残差学习</strong>: 大量残差块确保梯度流动和特征保持</li>
+<li><strong>深度可分离卷积</strong>: 减少参数量的同时保持表达能力</li>
+<li><strong>硬件加速</strong>: 针对AMD RDNA 3+架构的特定优化</li>
+</ol>
+<h2 id="fsr">与传统FSR的区别<a class="headerlink" href="#fsr" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>FSR 2/3</th>
+<th>FSR 4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>方法</td>
+<td>传统算法（TAA+锐化）</td>
+<td>深度神经网络</td>
+</tr>
+<tr>
+<td>权重文件</td>
+<td>无</td>
+<td>嵌入在Shader中</td>
+</tr>
+<tr>
+<td>计算资源</td>
+<td>低</td>
+<td>高（需要ML推理）</td>
+</tr>
+<tr>
+<td>质量</td>
+<td>良好</td>
+<td>优秀（特别是细节重建）</td>
+</tr>
+<tr>
+<td>硬件要求</td>
+<td>广泛兼容</td>
+<td>需要Shader Model 6.6</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fsr4shading-change">FSR4对透明物体和Shading Change的处理机制<a class="headerlink" href="#fsr4shading-change" title="Permanent link">&para;</a></h2>
+<h3 id="_22">透明物体和运动矢量缺失的处理<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
+<h4 id="1-reactive-mask">1. 反应式遮罩（Reactive Mask）系统<a class="headerlink" href="#1-reactive-mask" title="Permanent link">&para;</a></h4>
+<p>FSR4使用<strong>双重遮罩系统</strong>来识别和处理透明物体：</p>
+<p><strong>Reactive Mask生成</strong> (fsrapirendermodule.cpp:1667-1700):</p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1">// 自动反应式遮罩生成</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="n">ffx</span><span class="o">::</span><span class="n">DispatchDescUpscaleGenerateReactiveMask</span><span class="w"> </span><span class="n">dispatchDesc</span><span class="p">{};</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="n">dispatchDesc</span><span class="p">.</span><span class="n">colorOpaqueOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_pOpaqueTexture</span><span class="p">;</span><span class="w">      </span><span class="c1">// 仅不透明物体的颜色</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="n">dispatchDesc</span><span class="p">.</span><span class="n">colorPreUpscale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_pColorTarget</span><span class="p">;</span><span class="w">        </span><span class="c1">// 包含透明物体的完整颜色</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="n">dispatchDesc</span><span class="p">.</span><span class="n">outReactive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_pReactiveMask</span><span class="p">;</span><span class="w">           </span><span class="c1">// 输出反应式遮罩</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1">// 关键参数设置</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="n">dispatchDesc</span><span class="p">.</span><span class="n">cutoffThreshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.2f</span><span class="p">;</span><span class="w">         </span><span class="c1">// 差异检测阈值</span>
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="n">dispatchDesc</span><span class="p">.</span><span class="n">binaryValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.9f</span><span class="p">;</span><span class="w">             </span><span class="c1">// 高反应区域的标记值</span>
+</span></code></pre></div>
+<p><strong>工作原理</strong>：</p>
+<ul>
+<li>比较不透明渲染和完整渲染的<strong>颜色差异</strong></li>
+<li>差异超过阈值(0.2f)的区域被标记为高反应区域</li>
+<li>这些区域主要包含透明物体、粒子特效、UI元素</li>
+</ul>
+<p><strong>Composition Mask处理</strong> (fsrapirendermodule.cpp:91-103):</p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1">// 透明物体渲染时的额外输出</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">transOptions</span><span class="p">.</span><span class="n">OptionalAdditionalExports</span><span class="w"> </span><span class="o">=</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">    </span><span class="sa">L</span><span class="s">&quot;output.CompositionTarget = max(Alpha, hasAnimatedTexture);&quot;</span><span class="p">;</span>
+</span></code></pre></div>
+<ul>
+<li>直接存储透明物体的<strong>Alpha值</strong></li>
+<li>动画纹理也被标记为需要特殊处理的区域</li>
+</ul>
+<h4 id="2-disocclusion-detection">2. Disocclusion Detection（遮挡检测）<a class="headerlink" href="#2-disocclusion-detection" title="Permanent link">&para;</a></h4>
+<p><strong>运动矢量有效性检查</strong> (mlsr_optimized_includes.hlsli:171-181):</p>
+<div class="language-hlsl highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kt">bool</span><span class="w"> </span><span class="n">local_disocclusion_user</span><span class="p">(</span><span class="kt">uint2</span><span class="w"> </span><span class="n">tid</span><span class="p">,</span><span class="w"> </span><span class="k">inout</span><span class="w"> </span><span class="kt">float2</span><span class="w"> </span><span class="n">velocity</span><span class="p">)</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="p">{</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">    </span><span class="c1">// 检测无效运动矢量的多重条件</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">any</span><span class="p">(</span><span class="nb">isnan</span><span class="p">(</span><span class="n">velocity</span><span class="p">))</span><span class="w"> </span><span class="o">||</span><span class="w">           </span><span class="c1">// NaN检查</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">        </span><span class="nb">any</span><span class="p">(</span><span class="nb">isinf</span><span class="p">(</span><span class="n">velocity</span><span class="p">))</span><span class="w"> </span><span class="o">||</span><span class="w">           </span><span class="c1">// 无限大检查</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">        </span><span class="nb">any</span><span class="p">(</span><span class="n">velocity</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">1000000.f</span><span class="p">))</span><span class="w">        </span><span class="c1">// 异常大值检查</span>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="w">        </span><span class="n">velocity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">float2</span><span class="p">(</span><span class="mo">0</span><span class="p">,</span><span class="w"> </span><span class="mo">0</span><span class="p">);</span><span class="w">          </span><span class="c1">// 重置为零运动</span>
+</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">                      </span><span class="c1">// 标记为遮挡</span>
+</span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-23-11"><a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+</span><span id="__span-23-12"><a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>透明物体的运动矢量问题</strong>：</p>
+<ul>
+<li>透明物体通常没有可靠的运动矢量信息</li>
+<li>粒子系统可能产生极大或无效的运动矢量</li>
+<li>FSR4通过检测异常值自动识别这些区域</li>
+</ul>
+<h4 id="3-motion-vector-dilation">3. 运动矢量稀释（Motion Vector Dilation）<a class="headerlink" href="#3-motion-vector-dilation" title="Permanent link">&para;</a></h4>
+<p><strong>深度导向的矢量选择</strong> (mlsr_optimized_includes.hlsli:115-169):</p>
+<div class="language-hlsl highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kt">int2</span><span class="w"> </span><span class="n">dilate_mv</span><span class="p">(</span><span class="kt">uint2</span><span class="w"> </span><span class="n">tid</span><span class="p">,</span><span class="w"> </span><span class="kt">float2</span><span class="w"> </span><span class="n">origin_offset</span><span class="p">,</span><span class="w"> </span><span class="kt">Texture2D</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">depth_tex</span><span class="p">)</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="p">{</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">    </span><span class="c1">// 8邻域深度采样</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">uint</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mo">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">        </span><span class="kt">int2</span><span class="w"> </span><span class="n">neighbor_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">depth_offsets</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="w">        </span><span class="kt">float</span><span class="w"> </span><span class="n">neighbor_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">depth_tex</span><span class="p">[</span><span class="n">neighbor_pos</span><span class="p">];</span>
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="w">        </span><span class="c1">// 选择最近物体的运动矢量</span>
+</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">neighbor_depth</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">closest_depth</span><span class="p">)</span>
+</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="w">            </span><span class="n">closest_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">neighbor_depth</span><span class="p">;</span>
+</span><span id="__span-24-13"><a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a><span class="w">            </span><span class="n">selected_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">neighbor_pos</span><span class="p">;</span>
+</span><span id="__span-24-14"><a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-24-15"><a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-24-16"><a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">selected_pos</span><span class="p">;</span><span class="w">  </span><span class="c1">// 返回最可靠的运动矢量位置</span>
+</span><span id="__span-24-17"><a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>处理策略</strong>：</p>
+<ul>
+<li>当透明物体缺乏运动矢量时，使用<strong>背景物体的运动矢量</strong></li>
+<li>通过深度比较找到最近的可靠几何体</li>
+<li>确保时间重投影有合理的参考</li>
+</ul>
+<h3 id="shading-change">Shading Change的检测和处理<a class="headerlink" href="#shading-change" title="Permanent link">&para;</a></h3>
+<h4 id="1_1">1. 色度距离检测<a class="headerlink" href="#1_1" title="Permanent link">&para;</a></h4>
+<p><strong>YCbCr色彩空间分析</strong> (pre_wmma.hlsl:185-202):</p>
+<div class="language-hlsl highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1">// 颜色变化检测</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="kt">float3</span><span class="w"> </span><span class="n">input_ycbcr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RGBtoYCbCr</span><span class="p">(</span><span class="n">upscale_input</span><span class="p">.</span><span class="n">xyz</span><span class="p">);</span><span class="w">    </span><span class="c1">// 当前帧</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="kt">float3</span><span class="w"> </span><span class="n">history_ycbcr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RGBtoYCbCr</span><span class="p">(</span><span class="n">history</span><span class="p">);</span><span class="w">            </span><span class="c1">// 历史帧</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="c1">// 计算色度差异（Cb和Cr分量）</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">color_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">sqrt</span><span class="p">(</span>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="w">    </span><span class="nb">pow</span><span class="p">(</span><span class="n">input_ycbcr</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">history_ycbcr</span><span class="p">.</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">   </span><span class="c1">// Cb差异</span>
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="w">    </span><span class="nb">pow</span><span class="p">(</span><span class="n">input_ycbcr</span><span class="p">.</span><span class="n">z</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">history_ycbcr</span><span class="p">.</span><span class="n">z</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">   </span><span class="c1">// Cr差异</span>
+</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="w">    </span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span><span class="p">);</span><span class="w">                                       </span><span class="c1">// 数值稳定性</span>
+</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>
+</span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="c1">// 作为神经网络输入通道2</span>
+</span><span id="__span-25-12"><a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a><span class="n">downscaleInputs</span><span class="p">[</span><span class="mo">0</span><span class="p">].</span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NETWORK_DATA_TYPE</span><span class="p">(</span><span class="n">color_distance</span><span class="p">);</span>
+</span></code></pre></div>
+<p><strong>技术优势</strong>：</p>
+<ul>
+<li><strong>YCbCr分离</strong>: 亮度(Y)和色度(CbCr)独立处理</li>
+<li><strong>色度敏感</strong>: 专注检测材质、光照变化而非亮度波动</li>
+<li><strong>神经网络输入</strong>: 色度距离直接输入网络，用于学习适应策略</li>
+</ul>
+<h4 id="2_1">2. 循环状态的时间记忆<a class="headerlink" href="#2_1" title="Permanent link">&para;</a></h4>
+<p><strong>跨帧特征传递</strong> (pre_wmma.hlsl:195-201):</p>
+<div class="language-hlsl highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1">// 循环状态：来自上一帧的网络输出记忆</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="n">downscaleInputs</span><span class="p">[</span><span class="mo">0</span><span class="p">].</span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MODEL_RFM_NORMALIZE</span><span class="p">(</span><span class="n">recurrent</span><span class="p">[</span><span class="mo">0</span><span class="p">]);</span><span class="w">  </span><span class="c1">// R通道记忆</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="n">downscaleInputs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MODEL_RFM_NORMALIZE</span><span class="p">(</span><span class="n">recurrent</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span><span class="w">  </span><span class="c1">// G通道记忆</span>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="n">downscaleInputs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MODEL_RFM_NORMALIZE</span><span class="p">(</span><span class="n">recurrent</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span><span class="w">  </span><span class="c1">// B通道记忆</span>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="n">downscaleInputs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MODEL_RFM_NORMALIZE</span><span class="p">(</span><span class="n">recurrent</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span><span class="w">  </span><span class="c1">// A通道记忆</span>
+</span></code></pre></div>
+<p><strong>记忆机制</strong>：</p>
+<ul>
+<li><strong>循环状态保存</strong>: 上一帧网络输出的特征表示</li>
+<li><strong>时间连续性</strong>: 帮助网络理解和预测场景变化趋势</li>
+<li><strong>自适应学习</strong>: 根据历史模式调整当前帧的处理策略</li>
+</ul>
+<h4 id="3_1">3. 动态时间权重调整<a class="headerlink" href="#3_1" title="Permanent link">&para;</a></h4>
+<p><strong>基础权重计算</strong> (pre_wmma.hlsl:144-146):</p>
+<div class="language-hlsl highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">history_rect_alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1f</span><span class="p">;</span><span class="w">  </span><span class="c1">// 基础混合因子</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="kt">float</span><span class="w"> </span><span class="n">temporal_sample_weight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">upscale_input</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">history_rect_alpha</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>神经网络权重预测</strong> (post_wmma.hlsl:51-54):</p>
+<div class="language-hlsl highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1">// 神经网络输出的混合因子（通道3）</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">blending_factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">exp</span><span class="p">(</span><span class="o">-</span><span class="n">filter</span><span class="p">[</span><span class="mi">3</span><span class="p">]));</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1">// 智能时间混合</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="kt">float3</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">upscaled_color</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">blending_factor</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="w">             </span><span class="n">r_reprojected_color</span><span class="p">[</span><span class="kt">uint2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">)]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">blending_factor</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>自适应策略</strong>：</p>
+<ul>
+<li><strong>内容感知</strong>: 神经网络为每个像素预测最优混合权重</li>
+<li><strong>变化敏感</strong>: 检测到shading change时降低历史帧权重</li>
+<li><strong>稳定区域</strong>: 静态区域使用更多历史信息提高质量</li>
+</ul>
+<h3 id="_23">处理无运动矢量透明物体的完整流程<a class="headerlink" href="#_23" title="Permanent link">&para;</a></h3>
+<h4 id="1_2">阶段1: 渲染时标记<a class="headerlink" href="#1_2" title="Permanent link">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>不透明渲染 → 保存ColorOpaqueOnly
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>     ↓
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>透明物体渲染 → 输出Alpha到CompositionMask
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>     ↓
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>差异检测 → 生成ReactiveMask
+</span></code></pre></div>
+<h4 id="2-fsr4">阶段2: FSR4预处理<a class="headerlink" href="#2-fsr4" title="Permanent link">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>运动矢量检查 → 检测无效值 → 标记为Disocclusion
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>     ↓
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>深度稀释 → 使用背景物体运动矢量
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>     ↓
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>色度距离 → 输入神经网络通道2
+</span></code></pre></div>
+<h4 id="3_2">阶段3: 神经网络推理<a class="headerlink" href="#3_2" title="Permanent link">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>7通道输入 → 14-Pass网络 → 8通道滤波参数
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>(包含色度距离和循环状态)
+</span></code></pre></div>
+<h4 id="4_2">阶段4: 智能后处理<a class="headerlink" href="#4_2" title="Permanent link">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>提取混合因子 → 自适应时间权重
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>     ↓
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>高反应区域 → 更多依赖当前帧
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>     ↓
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>稳定区域 → 更多使用历史帧
+</span></code></pre></div>
+<h3 id="_24">关键技术创新<a class="headerlink" href="#_24" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>多重检测机制</strong>: 反应式遮罩 + 运动矢量检查 + 色度距离</li>
+<li><strong>智能替代策略</strong>: 深度稀释提供可靠的运动参考</li>
+<li><strong>神经网络驱动</strong>: 端到端学习最优的时间混合策略</li>
+<li><strong>像素级自适应</strong>: 每个像素独立的处理决策</li>
+</ol>
+<p>这种设计使FSR4能够高质量地处理透明物体、粒子特效和复杂光照变化，同时保持实时性能。</p>
+<p>FSR 4 是一个革命性的<strong>循环神经网络超分辨率系统</strong>，具有以下核心创新：</p>
+<h3 id="1_3">1. 循环神经网络架构<a class="headerlink" href="#1_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>时间记忆机制</strong>: 通过循环状态保持跨帧特征连续性，类似LSTM的记忆机制</li>
+<li><strong>多帧融合</strong>: 同时处理当前帧、历史帧和循环状态，实现真正的时间建模</li>
+<li><strong>运动补偿</strong>: 使用Catmull-Rom重采样和运动矢量实现高质量的历史帧对齐</li>
+</ul>
+<h3 id="2_2">2. 智能自适应滤波<a class="headerlink" href="#2_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>参数化滤波</strong>: 神经网络输出滤波器参数而非直接颜色，实现像素级自适应处理</li>
+<li><strong>各向异性处理</strong>: 支持X/Y方向独立的滤波缩放，处理不同方向的特征</li>
+<li><strong>内容感知混合</strong>: 基于神经网络预测的置信度进行智能的时间混合</li>
+</ul>
+<h3 id="3_3">3. 硬件优化设计<a class="headerlink" href="#3_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Int8量化</strong>: 所有权重使用8位整数量化，减少内存占用和提高推理速度</li>
+<li><strong>AMD WMMA加速</strong>: 充分利用AMD RDNA 3+架构的Wave Matrix Multiply指令</li>
+<li><strong>高效内存布局</strong>: NHWC格式和优化的内存访问模式</li>
+</ul>
+<h3 id="4-">4. 编码器-解码器拓扑<a class="headerlink" href="#4-" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>14个推理Pass</strong>: 从Pass 0到Pass 13的系统化处理流程</li>
+<li><strong>多尺度特征</strong>: 通过下采样和上采样实现不同分辨率的特征学习</li>
+<li><strong>残差连接</strong>: 保持梯度流动和特征传递</li>
+</ul>
+<h3 id="5_1">5. 实时性能<a class="headerlink" href="#5_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>管线化执行</strong>: 14个Pass可以管线化并行执行</li>
+<li><strong>内存复用</strong>: 79.1MB暂存内存的高效管理</li>
+<li><strong>质量可调</strong>: 多种质量预设适应不同性能需求</li>
+</ul>
+<p>FSR4的这种设计使其能够在保持实时性能的同时，提供接近或超越传统方法的图像质量，特别是在处理复杂运动场景和细节保持方面表现突出。其循环神经网络架构和智能滤波机制代表了实时超分辨率技术的重要突破。</p>
+<hr />
+<p><em>本分析基于FSR4 v0.7质量预设的HLSL Compute Shader代码进行逆向工程，可能存在细节偏差。</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/losuffi/losuffi.github.io" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.tracking", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+        <script src="../../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
